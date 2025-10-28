@@ -19,122 +19,122 @@ const rulesData = {
     rules: [
       {
         id: 'respect',
-        title: 'Respect et courtoisie',
-        description: 'Traitez tous les membres de la communauté avec respect et courtoisie. Les insultes, le harcèlement ou tout comportement hostile ne sont pas tolérés.',
+        title: 'Respect et fair-play',
+        description: 'Traitez tous les membres avec respect, que ce soit sur la plateforme ou lors des parties. Le fair-play est la valeur fondamentale de notre association.',
         severity: 'high'
       },
       {
-        id: 'no-spam',
-        title: 'Pas de spam ou de contenu répétitif',
-        description: 'Évitez de poster le même contenu plusieurs fois ou de faire du spam. Chaque contribution doit apporter de la valeur à la discussion.',
+        id: 'insa-community',
+        title: 'Communauté INSA',
+        description: 'L\'association est ouverte prioritairement aux étudiants et personnels de l\'INSA de Rouen. Les invités doivent être parrainés par un membre.',
         severity: 'medium'
       },
       {
-        id: 'appropriate-content',
-        title: 'Contenu approprié uniquement',
-        description: 'Le contenu doit être approprié pour tous les âges. Aucun contenu explicite, violent ou offensant n\'est autorisé.',
+        id: 'appropriate-behavior',
+        title: 'Comportement approprié',
+        description: 'Maintenez un comportement respectueux en toutes circonstances. Les insultes, provocations ou comportements antisportifs ne sont pas tolérés.',
         severity: 'high'
       },
       {
-        id: 'authentic-identity',
-        title: 'Identité authentique',
-        description: 'Utilisez votre vraie identité ou un pseudonyme constant. Les faux comptes et l\'usurpation d\'identité sont interdits.',
-        severity: 'high'
+        id: 'equipment-care',
+        title: 'Respect du matériel',
+        description: 'Prenez soin des tables de baby-foot et du matériel de l\'association. Tout dégât volontaire sera sanctionné.',
+        severity: 'medium'
       }
     ]
   },
   community: {
-    title: 'Vie Communautaire',
+    title: 'Vie Associative',
     icon: Users,
     color: 'text-green-600',
     bgColor: 'bg-green-50',
     rules: [
       {
-        id: 'constructive-discussions',
-        title: 'Discussions constructives',
-        description: 'Participez à des discussions constructives et respectueuses. Les débats sont encouragés mais doivent rester civilisés.',
+        id: 'welcoming-newcomers',
+        title: 'Accueil des nouveaux',
+        description: 'Aidez les nouveaux membres à s\'intégrer, expliquez les règles du baby-foot et partagez vos techniques. L\'entraide fait notre force.',
         severity: 'low'
       },
       {
-        id: 'help-others',
-        title: 'Entraide communautaire',
-        description: 'Aidez les nouveaux membres et partagez vos connaissances. Une communauté forte se construit ensemble.',
+        id: 'participation',
+        title: 'Participation active',
+        description: 'Participez aux tournois, événements et activités de l\'association. Plus nous sommes actifs, plus l\'association est dynamique.',
+        severity: 'low'
+      },
+      {
+        id: 'constructive-feedback',
+        title: 'Critiques constructives',
+        description: 'Vos retours sur l\'organisation, les tournois ou la plateforme sont les bienvenus, mais doivent être formulés de manière constructive.',
         severity: 'low'
       },
       {
         id: 'report-issues',
         title: 'Signalement des problèmes',
-        description: 'Signalez tout contenu ou comportement inapproprié aux modérateurs plutôt que de répondre de manière agressive.',
+        description: 'Signalez tout comportement inapproprié ou problème technique aux responsables de l\'association plutôt que de réagir impulsivement.',
         severity: 'medium'
-      },
-      {
-        id: 'follow-topics',
-        title: 'Restez dans le sujet',
-        description: 'Gardez vos contributions pertinentes par rapport au sujet de discussion ou à la catégorie de l\'article.',
-        severity: 'low'
       }
     ]
   },
-  comments: {
-    title: 'Commentaires et Publications',
+  platform: {
+    title: 'Utilisation de la Plateforme',
     icon: MessageSquare,
     color: 'text-purple-600',
     bgColor: 'bg-purple-50',
     rules: [
       {
-        id: 'quality-comments',
-        title: 'Commentaires de qualité',
-        description: 'Rédigez des commentaires réfléchis et bien articulés. Évitez les commentaires d\'un seul mot ou sans valeur ajoutée.',
-        severity: 'low'
-      },
-      {
-        id: 'no-personal-attacks',
-        title: 'Pas d\'attaques personnelles',
-        description: 'Critiquez les idées, pas les personnes. Les attaques personnelles et les insultes entraînent une sanction immédiate.',
+        id: 'match-reporting',
+        title: 'Déclaration des matchs',
+        description: 'Déclarez vos matchs de manière honnête et complète. Les scores trichés faussent le classement ELO et nuisent à tous.',
         severity: 'high'
       },
       {
-        id: 'no-hate-speech',
-        title: 'Pas de discours de haine',
-        description: 'Aucune forme de discrimination, racisme, sexisme ou discours de haine n\'est tolérée sur la plateforme.',
-        severity: 'high'
-      },
-      {
-        id: 'fact-checking',
-        title: 'Vérification des informations',
-        description: 'Vérifiez vos sources avant de partager des informations. La désinformation volontaire est sanctionnée.',
+        id: 'profile-accuracy',
+        title: 'Profil authentique',
+        description: 'Utilisez votre vraie identité dans votre profil. Les faux comptes perturbent l\'organisation des tournois.',
         severity: 'medium'
+      },
+      {
+        id: 'respectful-communication',
+        title: 'Communication respectueuse',
+        description: 'Gardez un ton respectueux dans vos échanges sur la plateforme. Les provocations et insultes sont sanctionnées.',
+        severity: 'high'
+      },
+      {
+        id: 'no-cheating',
+        title: 'Pas de triche',
+        description: 'Toute forme de triche (manipulation des scores, création de faux matchs, etc.) est formellement interdite.',
+        severity: 'high'
       }
     ]
   },
   sanctions: {
-    title: 'Sanctions et Modération',
+    title: 'Sanctions et Discipline',
     icon: Ban,
     color: 'text-red-600',
     bgColor: 'bg-red-50',
     rules: [
       {
         id: 'warning-system',
-        title: 'Système d\'avertissements',
-        description: 'Premier manquement : avertissement. Deuxième manquement : suspension temporaire. Troisième manquement : bannissement.',
+        title: 'Échelle des sanctions',
+        description: '1er manquement : avertissement. 2ème : suspension d\'une semaine. 3ème : exclusion temporaire d\'un mois. Récidive : exclusion définitive.',
         severity: 'high'
       },
       {
-        id: 'immediate-ban',
-        title: 'Bannissement immédiat',
-        description: 'Certains comportements (harcèlement grave, contenu illégal, spam massif) entraînent un bannissement immédiat.',
+        id: 'immediate-exclusion',
+        title: 'Exclusion immédiate',
+        description: 'Violence physique, harcèlement grave, dégradation volontaire du matériel ou triche répétée entraînent une exclusion immédiate.',
         severity: 'high'
       },
       {
-        id: 'appeal-process',
-        title: 'Processus d\'appel',
-        description: 'Vous pouvez contester une sanction en contactant l\'équipe de modération avec des éléments justificatifs.',
+        id: 'tournament-sanctions',
+        title: 'Sanctions en tournoi',
+        description: 'Comportement antisportif en tournoi : exclusion du tournoi en cours et interdiction de participation au tournoi suivant.',
         severity: 'medium'
       },
       {
-        id: 'repeat-offenses',
-        title: 'Récidive',
-        description: 'Les récidivistes font l\'objet de sanctions plus sévères. L\'historique des infractions est conservé.',
+        id: 'appeal-process',
+        title: 'Droit de recours',
+        description: 'Toute sanction peut être contestée auprès du bureau de l\'association. Contactez contact@bab-insa.fr avec vos arguments.',
         severity: 'medium'
       }
     ]
@@ -164,9 +164,9 @@ const getSeverityBadge = (severity: string) => {
           <Shield class="h-8 w-8 text-primary" />
         </div>
       </div>
-      <h1 class="text-3xl font-bold mb-2">Règlement de la Communauté</h1>
+      <h1 class="text-3xl font-bold mb-2">Règlement de l'Association</h1>
       <p class="text-muted-foreground text-lg">
-        Ensemble, construisons une communauté respectueuse et bienveillante
+        Ensemble, cultivons l'esprit sportif et la convivialité autour du baby-foot
       </p>
     </div>
 
@@ -178,9 +178,9 @@ const getSeverityBadge = (severity: string) => {
           <div>
             <h3 class="font-semibold text-amber-800 mb-2">Important à savoir</h3>
             <p class="text-amber-700 text-sm">
-              Ce règlement s'applique à tous les utilisateurs de la plateforme. En créant un compte,
-              vous acceptez de respecter ces règles. Toute violation peut entraîner des sanctions
-              allant de l'avertissement au bannissement définitif.
+              Ce règlement s'applique à tous les membres de l'association BAB'INSA et utilisateurs
+              de la plateforme. En rejoignant l'association, vous acceptez de respecter ces règles.
+              Toute violation peut entraîner des sanctions allant de l'avertissement à l'exclusion.
             </p>
           </div>
         </div>
@@ -234,9 +234,9 @@ const getSeverityBadge = (severity: string) => {
           <div class="flex justify-center mb-4">
             <CheckCircle class="h-8 w-8 text-green-600" />
           </div>
-          <h3 class="text-lg font-semibold mb-2">Merci de faire partie de notre communauté</h3>
+          <h3 class="text-lg font-semibold mb-2">Merci de faire partie de BAB'INSA</h3>
           <p class="text-muted-foreground mb-4">
-            En respectant ces règles, vous contribuez à créer un environnement positif pour tous.
+            En respectant ces règles, vous contribuez à maintenir l'esprit sportif et convivial qui fait la richesse de notre association.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
             <span class="text-muted-foreground">

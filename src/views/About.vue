@@ -1,6 +1,6 @@
 <!-- src/views/About.vue -->
 <script setup lang="ts">
-import { Heart, Users, Target, Zap, Globe, Code, Shield, Lightbulb, Award, TrendingUp } from 'lucide-vue-next'
+import { Heart, Users, Target, Code, Shield, Award, TrendingUp } from 'lucide-vue-next'
 import {
   Card,
   CardContent,
@@ -17,8 +17,8 @@ const aboutData = {
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
     content: `
-      <p>Nous créons une plateforme communautaire où les passionnés de technologie, de gaming et d'innovation peuvent se retrouver pour partager, apprendre et grandir ensemble.</p>
-      <p>Notre objectif est de démocratiser l'accès à l'information de qualité et de créer un espace d'échange bienveillant et constructif.</p>
+      <p>Nous créons une communauté dynamique autour du baby-foot à l'INSA de Rouen, où étudiants et personnels peuvent se retrouver pour partager leur passion du jeu et créer des liens durables.</p>
+      <p>Notre objectif est de développer la pratique du baby-foot sur le campus, organiser des tournois réguliers et maintenir un classement ELO pour stimuler la compétition amicale entre tous les participants.</p>
     `
   },
   story: {
@@ -27,9 +27,9 @@ const aboutData = {
     color: 'text-red-600',
     bgColor: 'bg-red-50',
     content: `
-      <p>Né en 2024 de la passion de quelques développeurs et créateurs de contenu, ce projet a commencé comme un simple blog personnel.</p>
-      <p>Face à l'engouement de la communauté et aux retours positifs, nous avons décidé de transformer cette initiative personnelle en véritable plateforme collaborative.</p>
-      <p>Aujourd'hui, nous sommes fiers de compter des milliers d'utilisateurs actifs qui contribuent quotidiennement à enrichir notre contenu.</p>
+      <p>Fondée en octobre 2025 par une bande d'étudiants passionnés de baby-foot à l'INSA de Rouen, notre association est née du constat simple : il manquait une vraie structure pour organiser et dynamiser la pratique du baby-foot sur le campus.</p>
+      <p>Ce qui a commencé par quelques parties improvisées entre amis s'est rapidement transformé en une véritable communauté. Face à l'engouement grandissant, nous avons décidé de créer cette plateforme pour officialiser les matchs, tenir un classement et organiser des événements.</p>
+      <p>Aujourd'hui, nous rassemblons déjà de nombreux joueurs réguliers et notre ambition est de faire du baby-foot un incontournable de la vie étudiante à l'INSA de Rouen.</p>
     `
   },
   values: {
@@ -38,50 +38,52 @@ const aboutData = {
     color: 'text-green-600',
     bgColor: 'bg-green-50',
     content: `
-      <p>Nos valeurs fondamentales guident chaque décision que nous prenons :</p>
+      <p>Nos valeurs fondamentales guident l'esprit de notre association :</p>
       <ul>
-        <li><strong>Transparence :</strong> Communication ouverte sur nos choix et évolutions</li>
-        <li><strong>Respect :</strong> Bienveillance et tolérance dans tous nos échanges</li>
-        <li><strong>Innovation :</strong> Recherche constante d'amélioration et de nouveauté</li>
-        <li><strong>Communauté :</strong> Priorité donnée aux besoins et retours des utilisateurs</li>
-        <li><strong>Qualité :</strong> Excellence dans le contenu et l'expérience utilisateur</li>
+        <li><strong>Fair-play :</strong> Respect des règles et de l'adversaire dans chaque partie</li>
+        <li><strong>Convivialité :</strong> Créer des liens et partager des moments amicaux autour du baby-foot</li>
+        <li><strong>Inclusivité :</strong> Ouverture à tous les niveaux, du débutant au joueur confirmé</li>
+        <li><strong>Passion :</strong> Cultiver l'amour du jeu et transmettre notre enthousiasme</li>
+        <li><strong>Esprit d'équipe :</strong> Encourager la solidarité et l'entraide entre les membres</li>
       </ul>
     `
   }
 }
 
-// Team members (you can customize these)
+// Function to hash email for gravatar (using pre-computed MD5)
+function hashEmail(email: string): string {
+  const emailLower = email.toLowerCase().trim()
+  // Pre-computed MD5 hashes
+  if (emailLower === 'romeo.woutisseth@gmail.com') {
+    return 'd940f4d1230378315da17f7d3fd5ed8f'
+  }
+  if (emailLower === 'magicbart@gmail.com') {
+    return 'c0637274270c1c4cbef8bc424530136b'
+  }
+  // Fallback for other emails
+  return '00000000000000000000000000000000'
+}
+
+// Team members
 const teamMembers = [
   {
-    name: 'Alex Martin',
-    role: 'Fondateur & Développeur',
-    description: 'Passionné de développement web et d\'UX design',
-    skills: ['Vue.js', 'Symfony', 'UI/UX'],
-    avatar: '👨‍💻'
+    name: 'Roméo Woutisseth',
+    role: 'Président',
+    description: 'Passionné de jeux vidéo et leader de la communauté',
+    skills: ['Gaming', 'Leadership', 'Communauté'],
+    email: 'romeo.woutisseth@gmail.com',
+    type: 'gravatar'
   },
   {
-    name: 'Sarah Johnson',
-    role: 'Community Manager',
-    description: 'Anime la communauté et modère les contenus',
-    skills: ['Communication', 'Modération', 'Marketing'],
-    avatar: '👩‍💼'
-  },
-  {
-    name: 'Mike Chen',
-    role: 'Rédacteur Technique',
-    description: 'Crée du contenu technique de qualité',
-    skills: ['Rédaction', 'Tech', 'Gaming'],
-    avatar: '✍️'
+    name: 'David Benard',
+    role: 'Développeur',
+    description: 'Développe et maintient la plateforme technique',
+    skills: ['Développement', 'Vue.js', 'Backend'],
+    email: 'magicbart@gmail.com',
+    type: 'gravatar'
   }
 ]
 
-// Platform statistics
-const statistics = [
-  { label: 'Utilisateurs actifs', value: '5,2K+', icon: Users },
-  { label: 'Articles publiés', value: '850+', icon: Lightbulb },
-  { label: 'Commentaires', value: '12K+', icon: Globe },
-  { label: 'Temps de réponse', value: '<24h', icon: Zap }
-]
 
 // Key features
 const features = [
@@ -90,12 +92,6 @@ const features = [
     description: 'Code source ouvert et contributions communautaires',
     icon: Code,
     color: 'text-purple-600'
-  },
-  {
-    title: 'Multilingue',
-    description: 'Interface disponible en français et anglais',
-    icon: Globe,
-    color: 'text-blue-600'
   },
   {
     title: 'Sécurisé',
@@ -153,27 +149,6 @@ const features = [
       </div>
     </div>
 
-    <!-- Statistics -->
-    <Card class="mb-12">
-      <CardHeader>
-        <CardTitle class="text-center">Notre Impact</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div
-              v-for="stat in statistics"
-              :key="stat.label"
-              class="text-center"
-          >
-            <div class="bg-primary/10 rounded-full p-3 w-fit mx-auto mb-3">
-              <component :is="stat.icon" class="h-6 w-6 text-primary" />
-            </div>
-            <div class="text-2xl font-bold text-primary mb-1">{{ stat.value }}</div>
-            <div class="text-sm text-muted-foreground">{{ stat.label }}</div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
 
     <!-- Team -->
     <Card class="mb-12">
@@ -190,7 +165,13 @@ const features = [
               :key="member.name"
               class="text-center p-4 rounded-lg hover:bg-muted/50 transition-colors"
           >
-            <div class="text-4xl mb-3">{{ member.avatar }}</div>
+            <div class="mb-3">
+              <img 
+                :src="`https://www.gravatar.com/avatar/${hashEmail(member.email!)}?s=80&d=identicon`"
+                :alt="member.name"
+                class="w-16 h-16 rounded-full mx-auto"
+              />
+            </div>
             <h3 class="font-semibold mb-1">{{ member.name }}</h3>
             <p class="text-primary text-sm font-medium mb-2">{{ member.role }}</p>
             <p class="text-muted-foreground text-sm mb-3">{{ member.description }}</p>

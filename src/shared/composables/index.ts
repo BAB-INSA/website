@@ -1,2 +1,3 @@
 // src/composables/index.ts
-export { useTwitchDomain } from './useTwitchDomain.ts'
+export { useDateFormatter } from './useDateFormatter'
+export { useSEO } from './useSEO'

@@ -18,21 +18,21 @@ const contactMethods = [
     icon: Mail,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
-    contact: 'contact@example.com',
-    description: 'Questions générales, suggestions, feedback',
+    contact: 'contact@bab-insa.fr',
+    description: 'Questions générales, adhésion, tournois',
     responseTime: '24-48h en moyenne',
     available: true
   },
   {
-    id: 'discord',
-    title: 'Serveur Discord',
-    subtitle: 'Communauté et support rapide',
+    id: 'email-tech',
+    title: 'Email Technique',
+    subtitle: 'Problèmes techniques et suggestions',
     icon: MessageCircle,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    contact: 'discord.gg/votre-serveur',
-    description: 'Chat en temps réel, entraide communautaire',
-    responseTime: 'Immédiat (selon disponibilité)',
+    color: 'text-green-600',
+    bgColor: 'bg-green-50',
+    contact: 'support@bab-insa.fr',
+    description: 'Bugs, améliorations, fonctionnalités',
+    responseTime: '48-72h en moyenne',
     available: true
   }
 ]
@@ -40,40 +40,40 @@ const contactMethods = [
 // Specialized contacts
 const specializedContacts = [
   {
-    id: 'support',
+    id: 'membership',
+    title: 'Adhésion & Inscription',
+    icon: User,
+    email: 'contact@bab-insa.fr',
+    description: 'Rejoindre l\'association, informations membres'
+  },
+  {
+    id: 'tournaments',
+    title: 'Tournois & Événements',
+    icon: Lightbulb,
+    email: 'tournois@bab-insa.fr',
+    description: 'Organisation de tournois, événements spéciaux'
+  },
+  {
+    id: 'technical',
     title: 'Support Technique',
     icon: Bug,
-    email: 'support@example.com',
-    description: 'Bugs, problèmes techniques, dysfonctionnements'
+    email: 'support@bab-insa.fr',
+    description: 'Problèmes de site, bugs, dysfonctionnements'
   },
   {
     id: 'privacy',
     title: 'Protection des Données',
     icon: Shield,
-    email: 'dpo@example.com',
+    email: 'dpo@bab-insa.fr',
     description: 'RGPD, vie privée, suppression de données'
-  },
-  {
-    id: 'suggestions',
-    title: 'Suggestions & Idées',
-    icon: Lightbulb,
-    email: 'ideas@example.com',
-    description: 'Nouvelles fonctionnalités, améliorations'
-  },
-  {
-    id: 'business',
-    title: 'Partenariats',
-    icon: User,
-    email: 'business@example.com',
-    description: 'Collaborations, partenariats, opportunités'
   }
 ]
 
 // Office hours
 const officeHours = [
-  { day: 'Lundi - Vendredi', hours: '9h00 - 18h00' },
-  { day: 'Week-end', hours: 'Support limité' },
-  { day: 'Discord', hours: '24h/24 (communauté)' }
+  { day: 'Périodes scolaires', hours: 'Réponse sous 48h' },
+  { day: 'Vacances scolaires', hours: 'Support limité' },
+  { day: 'Sur le campus', hours: 'Foyer étudiant INSA' }
 ]
 </script>
 
@@ -137,22 +137,11 @@ const officeHours = [
             <!-- Action Button -->
             <div class="pt-2">
               <a
-                  v-if="method.id === 'email-general'"
                   :href="`mailto:${method.contact}`"
                   class="inline-flex items-center gap-2 text-primary hover:underline font-medium"
               >
                 <Mail class="h-4 w-4" />
                 Envoyer un email
-              </a>
-              <a
-                  v-else-if="method.id === 'discord'"
-                  :href="`https://${method.contact}`"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 text-primary hover:underline font-medium"
-              >
-                <MessageCircle class="h-4 w-4" />
-                Rejoindre Discord
               </a>
             </div>
           </CardContent>
@@ -220,7 +209,7 @@ const officeHours = [
           </div>
           <div class="mt-4 p-3 bg-amber-50 rounded-lg">
             <p class="text-xs text-amber-700">
-              <strong>Note :</strong> Les réponses peuvent prendre plus de temps le week-end et les jours fériés.
+              <strong>Note :</strong> Les réponses peuvent prendre plus de temps pendant les vacances scolaires et les périodes d'examens.
             </p>
           </div>
         </CardContent>
@@ -239,9 +228,9 @@ const officeHours = [
             <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
               <div class="flex items-center gap-2">
                 <div class="h-2 w-2 rounded-full bg-green-500"></div>
-                <span class="text-sm font-medium">Discord</span>
+                <span class="text-sm font-medium">Email technique</span>
               </div>
-              <span class="text-sm text-muted-foreground">Temps réel</span>
+              <span class="text-sm text-muted-foreground">48-72h</span>
             </div>
 
             <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
@@ -255,9 +244,9 @@ const officeHours = [
             <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
               <div class="flex items-center gap-2">
                 <div class="h-2 w-2 rounded-full bg-orange-500"></div>
-                <span class="text-sm font-medium">Support technique</span>
+                <span class="text-sm font-medium">Périodes de vacances</span>
               </div>
-              <span class="text-sm text-muted-foreground">2-5 jours</span>
+              <span class="text-sm text-muted-foreground">Réponse différée</span>
             </div>
           </div>
         </CardContent>
@@ -271,13 +260,13 @@ const officeHours = [
           <MessageCircle class="h-8 w-8 text-primary mx-auto mb-4" />
           <h3 class="text-lg font-semibold mb-2">Nous sommes là pour vous aider</h3>
           <p class="text-muted-foreground mb-4">
-            N'hésitez pas à nous contacter pour toute question, suggestion ou problème.
-            Notre équipe est à votre disposition !
+            N'hésitez pas à nous contacter pour rejoindre l'association, participer aux tournois
+            ou pour toute question sur le baby-foot à l'INSA de Rouen !
           </p>
           <div class="flex flex-wrap justify-center gap-2">
-            <Badge variant="outline">Support Francophone</Badge>
-            <Badge variant="outline">Communauté Active</Badge>
-            <Badge variant="outline">Réponse Rapide</Badge>
+            <Badge variant="outline">Association Étudiante</Badge>
+            <Badge variant="outline">INSA Rouen</Badge>
+            <Badge variant="outline">Baby-foot</Badge>
           </div>
         </div>
       </CardContent>

@@ -19,40 +19,42 @@ const legalData = {
     sections: [
       {
         id: 'company-info',
-        title: 'Société éditrice',
+        title: 'Association éditrice',
         content: `
           <div class="space-y-3">
             <div>
-              <strong>Dénomination sociale :</strong> Mon Application SAS<br>
-              <strong>Forme juridique :</strong> Société par Actions Simplifiée<br>
-              <strong>Capital social :</strong> 10 000 €<br>
-              <strong>SIRET :</strong> 123 456 789 00012<br>
-              <strong>Code APE/NAF :</strong> 6201Z (Programmation informatique)
+              <strong>Dénomination sociale :</strong> BAB'INSA<br>
+              <strong>Forme juridique :</strong> Association loi 1901<br>
+              <strong>Objet social :</strong> Promotion et organisation d'activités de baby-foot à l'INSA de Rouen<br>
+              <strong>Déclaration en préfecture :</strong> En cours<br>
+              <strong>SIRET :</strong> En cours d'obtention
             </div>
             <div>
               <strong>Siège social :</strong><br>
-              123 Rue de la Tech<br>
-              75001 Paris, France
+              INSA Rouen Normandie<br>
+              Avenue de l'Université<br>
+              76800 Saint-Étienne-du-Rouvray, France
             </div>
             <div>
-              <strong>RCS :</strong> Paris B 123 456 789<br>
-              <strong>TVA Intracommunautaire :</strong> FR12345678901
+              <strong>Création :</strong> Octobre 2025<br>
+              <strong>Statut :</strong> Association à but non lucratif
             </div>
           </div>
         `
       },
       {
         id: 'management',
-        title: 'Direction et représentation légale',
+        title: 'Bureau et représentation légale',
         content: `
           <div class="space-y-2">
             <div>
-              <strong>Président :</strong> M. Jean DUPONT<br>
-              <strong>Directeur de la publication :</strong> M. Jean DUPONT
+              <strong>Président :</strong> Roméo WOUTISSETH<br>
+              <strong>Directeur de la publication :</strong> Roméo WOUTISSETH<br>
+              <strong>Email :</strong> romeo.woutisseth@gmail.com
             </div>
             <div>
-              <strong>Responsable éditorial :</strong> Mme Marie MARTIN<br>
-              <strong>Email :</strong> editorial@example.com
+              <strong>Développeur et webmaster :</strong> David BENARD<br>
+              <strong>Email technique :</strong> magicbart@gmail.com
             </div>
           </div>
         `
@@ -72,19 +74,20 @@ const legalData = {
           <div class="space-y-3">
             <div>
               <strong>Adresse postale :</strong><br>
-              Mon Application SAS<br>
-              123 Rue de la Tech<br>
-              75001 Paris, France
+              Association BAB'INSA<br>
+              INSA Rouen Normandie<br>
+              Avenue de l'Université<br>
+              76800 Saint-Étienne-du-Rouvray, France
             </div>
             <div>
-              <strong>Téléphone :</strong> +33 1 23 45 67 89<br>
-              <strong>Email général :</strong> contact@example.com<br>
-              <strong>Email support :</strong> support@example.com
+              <strong>Email du président :</strong> romeo.woutisseth@gmail.com<br>
+              <strong>Email technique :</strong> magicbart@gmail.com<br>
+              <strong>Site web :</strong> En cours de développement
             </div>
             <div>
-              <strong>Horaires d'ouverture :</strong><br>
-              Du lundi au vendredi : 9h00 - 18h00<br>
-              Fermé les week-ends et jours fériés
+              <strong>Disponibilité :</strong><br>
+              Pendant les périodes scolaires de l'INSA<br>
+              Réponse sous 48h en général
             </div>
           </div>
         `
@@ -123,8 +126,8 @@ const legalData = {
             <div>
               <strong>Technologies utilisées :</strong><br>
               • Frontend: Vue.js 3, TypeScript, Tailwind CSS<br>
-              • Backend: Symfony 7, PHP 8.4<br>
-              • Base de données: Mysql<br>
+              • Backend: Go (Golang)<br>
+              • Base de données: PostgreSQL<br>
               • CDN: CloudFlare
             </div>
             <div>
@@ -170,17 +173,16 @@ const legalData = {
           <div class="space-y-2">
             <div>
               <strong>Droits d'auteur :</strong><br>
-              L'ensemble du contenu de ce site (textes, images, vidéos, logos, etc.)
-              est protégé par le droit d'auteur et appartient à Mon Application SAS
-              ou à ses partenaires.
+              L'ensemble du contenu de ce site (textes, images, logos, etc.)
+              est protégé par le droit d'auteur et appartient à l'association BAB'INSA
+              ou à ses membres contributeurs.
             </div>
             <div>
               <strong>Utilisation autorisée :</strong><br>
-              La consultation et l'utilisation du site à des fins personnelles
-              sont autorisées. Toute reproduction, représentation, modification,
-              publication ou transmission de tout ou partie du contenu,
-              par quelque procédé que ce soit, est strictement interdite
-              sans autorisation écrite préalable.
+              La consultation et l'utilisation du site par les membres de la communauté
+              INSA de Rouen sont librement autorisées. Toute utilisation commerciale
+              ou reproduction à des fins autres que celles de l'association
+              est strictement interdite sans autorisation écrite préalable.
             </div>
           </div>
         `
@@ -199,17 +201,19 @@ const legalData = {
         content: `
           <div class="space-y-2">
             <div>
-              <strong>Responsable de traitement :</strong> Mon Application SAS<br>
-              <strong>DPO (Délégué à la Protection des Données) :</strong><br>
-              Email: dpo@example.com<br>
-              Courrier: DPO - Mon Application SAS, 123 Rue de la Tech, 75001 Paris
+              <strong>Responsable de traitement :</strong> Association BAB'INSA<br>
+              <strong>Représentant légal :</strong> Roméo WOUTISSETH (Président)<br>
+              <strong>Contact données personnelles :</strong><br>
+              Email: romeo.woutisseth@gmail.com<br>
+              Courrier: BAB'INSA, INSA Rouen, 76800 Saint-Étienne-du-Rouvray
             </div>
             <div>
               <strong>Finalités du traitement :</strong><br>
-              • Gestion des comptes utilisateurs<br>
-              • Fonctionnement du service (commentaires, préférences)<br>
-              • Amélioration de nos services<br>
-              • Communication avec les utilisateurs
+              • Gestion des comptes des membres<br>
+              • Classement ELO et historique des matchs<br>
+              • Organisation des tournois<br>
+              • Communication associative<br>
+              • Fonctionnement de la plateforme
             </div>
           </div>
         `
@@ -326,15 +330,15 @@ const currentDate = new Date().toLocaleDateString('fr-FR', {
           <div class="space-y-3 text-sm">
             <div>
               <p class="font-semibold mb-2">Questions générales :</p>
-              <p class="text-muted-foreground">contact@example.com</p>
+              <p class="text-muted-foreground">romeo.woutisseth@gmail.com</p>
             </div>
             <div>
               <p class="font-semibold mb-2">Support technique :</p>
-              <p class="text-muted-foreground">support@example.com</p>
+              <p class="text-muted-foreground">magicbart@gmail.com</p>
             </div>
             <div>
               <p class="font-semibold mb-2">Questions juridiques :</p>
-              <p class="text-muted-foreground">legal@example.com</p>
+              <p class="text-muted-foreground">romeo.woutisseth@gmail.com</p>
             </div>
           </div>
         </CardContent>
