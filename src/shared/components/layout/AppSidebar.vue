@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Home, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale } from "lucide-vue-next"
+import { Home, Users, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale } from "lucide-vue-next"
 import {
     Sidebar,
     SidebarContent,
@@ -38,6 +38,14 @@ watch(() => router.currentRoute.value.path, () => {
                 <RouterLink :to="{name: 'Home'}">
                   <Home />
                   <span>Accueil</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'PlayerList'}">
+                  <Users />
+                  <span>Liste des Joueurs</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

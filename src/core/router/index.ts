@@ -14,6 +14,8 @@ import Profile from '@/features/auth/views/Profile.vue'
 import ForgotPassword from '@/features/auth/views/ForgotPassword.vue'
 import ResetPassword from '@/features/auth/views/ResetPassword.vue'
 import NotFound from '@/views/NotFound.vue'
+import PlayerMain from '@/features/core/views/player/profile/PlayerMain.vue'
+import PlayerList from '@/features/core/views/player/PlayerList.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -28,6 +30,22 @@ const routes: Array<RouteRecordRaw> = [
                         path: '',
                         name: 'Home',
                         component: Home
+                    },
+                    {
+                        path: 'players',
+                        name: 'PlayerList',
+                        component: PlayerList,
+                        meta: {
+                            title: 'Liste des Joueurs'
+                        }
+                    },
+                    {
+                        path: 'elo-chart-demo',
+                        name: 'EloChartDemo',
+                        component: () => import('@/features/core/views/EloChartDemo.vue'),
+                        meta: {
+                            title: 'Démo Graphique ELO'
+                        }
                     },
                     {
                         path: 'pwa-settings',
@@ -124,6 +142,32 @@ const routes: Array<RouteRecordRaw> = [
                         meta: {
                             title: 'About Us'
                         }
+                    },
+                    {
+                        path: 'player/:id',
+                        component: PlayerMain,
+                        children: [
+                            {
+                                path: '',
+                                redirect: 'profile'
+                            },
+                            {
+                                path: 'profile',
+                                name: 'PlayerProfile',
+                                component: () => import('@/features/core/views/player/profile/PlayerProfile.vue'),
+                                meta: {
+                                    title: 'Player Profile'
+                                }
+                            },
+                            {
+                                path: 'history',
+                                name: 'PlayerHistory',
+                                component: () => import('@/features/core/views/player/profile/PlayerHistory.vue'),
+                                meta: {
+                                    title: 'Match History'
+                                }
+                            }
+                        ]
                     },
                     {
                         path: 'legal',

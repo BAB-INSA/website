@@ -24,14 +24,15 @@ const faqData = [
         id: 'create-account',
         question: 'Comment créer un compte ?',
         answer: `
-          <p>Pour créer un compte sur notre plateforme :</p>
+          <p>Pour rejoindre l'association BAB'INSA et créer un compte :</p>
           <ol>
+            <li>Vérifiez que vous êtes étudiant ou personnel de l'INSA de Rouen</li>
             <li>Cliquez sur le bouton "Inscription" en haut à droite</li>
-            <li>Remplissez le formulaire avec votre email, nom d'utilisateur et mot de passe</li>
+            <li>Remplissez le formulaire avec votre email INSA, nom d'utilisateur et mot de passe</li>
             <li>Confirmez votre mot de passe</li>
             <li>Cliquez sur "Créer un compte"</li>
           </ol>
-          <p>Vous pourrez ensuite vous connecter immédiatement avec vos identifiants.</p>
+          <p>Une fois inscrit, vous pourrez déclarer vos matchs et participer aux tournois !</p>
         `
       },
       {
@@ -66,40 +67,6 @@ const faqData = [
     ]
   },
   {
-    id: 'articles',
-    title: 'Articles et Contenu',
-    questions: [
-      {
-        id: 'view-articles',
-        question: 'Comment consulter les articles ?',
-        answer: `
-          <p>Pour consulter les articles :</p>
-          <ul>
-            <li>Les derniers articles apparaissent sur la page d'accueil</li>
-            <li>Cliquez sur un article pour le lire en entier</li>
-            <li>Utilisez la fonction de recherche pour trouver des articles spécifiques</li>
-            <li>Parcourez les catégories disponibles</li>
-          </ul>
-        `
-      },
-      {
-        id: 'comment-article',
-        question: 'Comment commenter un article ?',
-        answer: `
-          <p>Pour commenter un article :</p>
-          <ol>
-            <li>Vous devez être connecté à votre compte</li>
-            <li>Ouvrez l'article que vous souhaitez commenter</li>
-            <li>Faites défiler jusqu'à la section commentaires</li>
-            <li>Rédigez votre commentaire dans le champ prévu</li>
-            <li>Cliquez sur "Poster le commentaire"</li>
-          </ol>
-          <p><strong>Note :</strong> Vous pouvez modifier ou supprimer vos propres commentaires.</p>
-        `
-      }
-    ]
-  },
-  {
     id: 'profile',
     title: 'Profil et Paramètres',
     questions: [
@@ -113,8 +80,7 @@ const faqData = [
             <li>Sélectionnez "Profil" dans le menu</li>
             <li>Utilisez les onglets pour modifier différentes sections :
               <ul>
-                <li><strong>Informations personnelles :</strong> nom d'utilisateur, email, langue</li>
-                <li><strong>Photo de profil :</strong> téléchargez votre avatar</li>
+                <li><strong>Informations personnelles :</strong> nom d'utilisateur, email</li>
                 <li><strong>Mot de passe :</strong> changez votre mot de passe</li>
               </ul>
             </li>
@@ -126,15 +92,116 @@ const faqData = [
         id: 'upload-avatar',
         question: 'Comment télécharger une photo de profil ?',
         answer: `
-          <p>Pour ajouter ou changer votre photo de profil :</p>
+          <p>Nous utilisons Gravatar pour les photos de profil :</p>
           <ol>
-            <li>Allez dans votre profil → onglet "Photo de profil"</li>
-            <li>Glissez-déposez une image ou cliquez sur "Parcourir les fichiers"</li>
-            <li>Sélectionnez une image (PNG, JPG ou GIF, max 2 Mo)</li>
-            <li>L'image sera automatiquement redimensionnée à 100x100 pixels</li>
-            <li>Cliquez sur "Télécharger la photo"</li>
+            <li>Allez sur <strong>gravatar.com</strong></li>
+            <li>Créez un compte avec la même adresse email que votre compte</li>
+            <li>Téléchargez votre photo de profil sur Gravatar</li>
+            <li>Votre photo apparaîtra automatiquement sur notre plateforme</li>
           </ol>
-          <p><strong>Conseil :</strong> Utilisez une image carrée pour un meilleur rendu.</p>
+          <p><strong>Note :</strong> Il peut y avoir un délai de quelques minutes avant que votre nouvelle photo apparaisse.</p>
+        `
+      }
+    ]
+  },
+  {
+    id: 'baby-foot',
+    title: 'Baby-foot et Matchs',
+    questions: [
+      {
+        id: 'declare-match',
+        question: 'Comment déclarer un match ?',
+        answer: `
+          <p>Pour déclarer un match de baby-foot :</p>
+          <ol>
+            <li>Connectez-vous à votre compte</li>
+            <li>Allez dans "Nouveau Match" depuis le menu principal</li>
+            <li>Sélectionnez votre adversaire (ou vos adversaires en double)</li>
+            <li>Indiquez le score final (premier à 10 buts)</li>
+            <li>Confirmez la déclaration</li>
+          </ol>
+          <p><strong>Validation automatique :</strong> Le match est automatiquement validé au bout de 24h dans l'ordre chronologique pour garantir l'équité du système ELO. Pendant ces 24h, votre adversaire peut faire une réclamation s'il conteste le résultat.</p>
+        `
+      },
+      {
+        id: 'elo-system',
+        question: 'Comment fonctionne le classement ELO ?',
+        answer: `
+          <p>Le système ELO classe les joueurs selon leurs performances :</p>
+          <ul>
+            <li><strong>Points de départ :</strong> Tous les nouveaux joueurs commencent à 1200 points</li>
+            <li><strong>Gains/Pertes :</strong> Vous gagnez des points en battant des adversaires, en perdez en perdant</li>
+            <li><strong>Calcul :</strong> Plus votre adversaire est fort, plus vous gagnez de points en le battant</li>
+            <li><strong>Validation :</strong> Les matchs sont validés automatiquement après 24h dans l'ordre chronologique</li>
+            <li><strong>Mise à jour :</strong> Le classement est mis à jour quotidiennement avec les matchs validés</li>
+          </ul>
+          <p>Ce système garantit l'équité en traitant tous les matchs dans l'ordre chronologique, évitant les stratégies de manipulation du classement.</p>
+        `
+      },
+      {
+        id: 'match-rules',
+        question: 'Quelles sont les règles du baby-foot à l\'association ?',
+        answer: `
+          <p>Les règles officielles de BAB'INSA :</p>
+          <ul>
+            <li><strong>Score :</strong> Premier joueur/équipe à 10 buts gagne</li>
+            <li><strong>Remise en jeu :</strong> Toujours par le joueur qui a encaissé le but</li>
+            <li><strong>Roulette :</strong> Interdite (360° des barres)</li>
+            <li><strong>Arrêt de balle :</strong> Maximum 3 secondes par barre</li>
+            <li><strong>Sortie de balle :</strong> Remise en jeu par les demis du joueur qui a touché en dernier</li>
+          </ul>
+          <p><strong>Fair-play :</strong> Le respect des règles et de l'adversaire est primordial !</p>
+        `
+      },
+      {
+        id: 'match-dispute',
+        question: 'Comment contester un résultat de match ?',
+        answer: `
+          <p>Si vous contestez un résultat déclaré par votre adversaire :</p>
+          <ol>
+            <li>Vous avez <strong>24 heures</strong> après la déclaration pour faire une réclamation</li>
+            <li>Allez dans "Mes Matchs" et cliquez sur "Contester" à côté du match concerné</li>
+            <li>Expliquez brièvement le motif de votre contestation</li>
+            <li>Le match est mis en attente et sera examiné par les responsables</li>
+            <li>Une décision sera prise et vous serez notifiés tous les deux</li>
+          </ol>
+          <p><strong>Important :</strong> Passé le délai de 24h, le match est automatiquement validé et ne peut plus être contesté. Les réclamations abusives peuvent être sanctionnées.</p>
+        `
+      }
+    ]
+  },
+  {
+    id: 'tournaments',
+    title: 'Tournois et Événements',
+    questions: [
+      {
+        id: 'join-tournament',
+        question: 'Comment participer à un tournoi ?',
+        answer: `
+          <p>Pour participer aux tournois BAB'INSA :</p>
+          <ol>
+            <li>Consultez la section "Tournois" sur la plateforme</li>
+            <li>Choisissez le tournoi qui vous intéresse (simple, double, débutant...)</li>
+            <li>Cliquez sur "S'inscrire" avant la date limite</li>
+            <li>Vérifiez votre inscription dans votre profil</li>
+            <li>Présentez-vous à l'heure et au lieu indiqués</li>
+          </ol>
+          <p><strong>Note :</strong> Certains tournois ont des critères d'éligibilité (niveau ELO, statut membre, etc.)</p>
+        `
+      },
+      {
+        id: 'tournament-format',
+        question: 'Quels types de tournois sont organisés ?',
+        answer: `
+          <p>L'association organise différents types de tournois :</p>
+          <ul>
+            <li><strong>Tournoi mensuel :</strong> Simple élimination, tous niveaux</li>
+            <li><strong>Championnat annuel :</strong> Phase de poules puis élimination directe</li>
+            <li><strong>Tournoi débutant :</strong> Réservé aux joueurs ELO < 1100</li>
+            <li><strong>Tournoi double :</strong> Par équipes de 2 joueurs</li>
+            <li><strong>Events spéciaux :</strong> Journées à thème, inter-associations</li>
+          </ul>
+          <p>Restez connectés aux annonces pour ne rien rater !</p>
         `
       }
     ]
@@ -247,21 +314,21 @@ const faqData = [
         <div class="text-center">
           <h3 class="text-lg font-semibold mb-2">Vous ne trouvez pas votre réponse ?</h3>
           <p class="text-muted-foreground mb-4">
-            Notre équipe de support est là pour vous aider
+            L'équipe de BAB'INSA est là pour vous aider
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-                href="mailto:support@example.com"
+                href="mailto:contact@bab-insa.fr"
                 class="text-primary hover:underline font-medium"
             >
-              support@example.com
+              contact@bab-insa.fr
             </a>
             <span class="hidden sm:inline text-muted-foreground">•</span>
             <a
-                href="#"
+                href="mailto:support@bab-insa.fr"
                 class="text-primary hover:underline font-medium"
             >
-              Contactez-nous
+              support@bab-insa.fr
             </a>
           </div>
         </div>
