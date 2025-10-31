@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Home, Users, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale } from "lucide-vue-next"
+import { Home, Users, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale, Settings } from "lucide-vue-next"
 import {
     Sidebar,
     SidebarContent,
@@ -13,9 +13,11 @@ import {
 import { useSidebar } from '@/shared/components/ui/sidebar'
 import { useRouter } from 'vue-router'
 import { watch } from 'vue'
+import { useAdmin } from '@/features/admin/composables/useAdmin'
 
 const { setOpenMobile } = useSidebar()
 const router = useRouter()
+const { isAdmin } = useAdmin()
 
 /**
  * Watch for route changes and close mobile sidebar
@@ -53,6 +55,22 @@ watch(() => router.currentRoute.value.path, () => {
         </SidebarGroupContent>
       </SidebarGroup>
 
+      <!-- Section Admin -->
+      <SidebarGroup v-if="isAdmin" class="mt-6">
+        <SidebarGroupLabel>Administration</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'AdminUsers'}">
+                  <Settings />
+                  <span>Gestion des utilisateurs</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
 
       <!-- Section Liens utiles -->
       <SidebarGroup class="mt-6">
