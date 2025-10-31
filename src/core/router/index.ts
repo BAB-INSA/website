@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import { useAuthStore } from '../../features/auth/stores/auth.ts'
+import { useAuthStore } from '@/features/auth/stores/auth.ts'
 
 // Import layouts
 import AppLayout from '@/shared/components/layout/AppLayout.vue'
@@ -16,6 +16,7 @@ import ResetPassword from '@/features/auth/views/ResetPassword.vue'
 import NotFound from '@/views/NotFound.vue'
 import PlayerMain from '@/features/core/views/player/profile/PlayerMain.vue'
 import PlayerList from '@/features/core/views/player/PlayerList.vue'
+import { adminRoutes } from '@/features/admin/router/admin.routes'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -86,6 +87,8 @@ const routes: Array<RouteRecordRaw> = [
                         component: Profile,
                         meta: { requiresAuth: true }
                     },
+                    // Admin routes
+                    ...adminRoutes,
                     {
                         path: 'settings',
                         name: 'Settings',
@@ -201,6 +204,7 @@ router.beforeEach((to, _from, next) => {
 
     // Auth checks
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+    const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
     const isGuestOnly = to.matched.some(record => record.meta.guest)
 
     if (requiresAuth && !authStore.isAuthenticated) {
@@ -208,6 +212,16 @@ router.beforeEach((to, _from, next) => {
     } else if (isGuestOnly && authStore.isAuthenticated) {
         // Redirect authenticated users to home
         next('/')
+    } else if (requiresAdmin && authStore.isAuthenticated) {
+        // Check if user has admin role
+        const userRoles = authStore.user?.roles || []
+        const isAdmin = userRoles.includes('admin') || userRoles.includes('superAdmin')
+        
+        if (!isAdmin) {
+            next('/')
+        } else {
+            next()
+        }
     } else {
         next()
     }
