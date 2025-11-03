@@ -25,7 +25,7 @@ class RegisterService {
      * @returns Promise with the API response
      */
     async register(userData: RegisterData): Promise<RegisterResponse> {
-        const response = await apiClient.post<RegisterResponse>('/api/users', userData)
+        const response = await apiClient.post<RegisterResponse>('/users', userData)
         return response.data
     }
 }

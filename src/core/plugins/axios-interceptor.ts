@@ -61,7 +61,7 @@ export default {
             async error => {
                 // Get the original request that caused the error
                 const originalRequest = error.config
-                const isLoginRequest = originalRequest.url?.includes('/api/login_check')
+                const isLoginRequest = originalRequest.url?.includes('/auth/login')
 
                 // Avoid infinite refresh loops
                 if (originalRequest._retry) {
@@ -74,7 +74,7 @@ export default {
                     const authStore = useAuthStore()
 
                     // If we don't have a refresh token or the request was for a refresh token
-                    if (!authStore.refreshToken || originalRequest.url === '/api/token/refresh') {
+                    if (!authStore.refreshToken || originalRequest.url === '/auth/refresh') {
                         // Avoid showing multiple logout notifications
                         if (!isHandlingLogout) {
                             isHandlingLogout = true

@@ -32,25 +32,6 @@ class MatchService {
         const response = await apiClient.post('/matches', matchData)
         return response.data
     }
-
-    async updateMatch(id: number, matchData: MatchUpdateData): Promise<Match> {
-        const response = await apiClient.put(`/matches/${id}`, matchData)
-        return response.data
-    }
-
-    async deleteMatch(id: number): Promise<void> {
-        await apiClient.delete(`/matches/${id}`)
-    }
-
-    async confirmMatch(id: number): Promise<Match> {
-        const response = await apiClient.put(`/matches/${id}/confirm`)
-        return response.data
-    }
-
-    async autoValidateMatches(): Promise<Match[]> {
-        const response = await apiClient.put('/matches/auto-validate')
-        return response.data
-    }
 }
 
 export default new MatchService()
