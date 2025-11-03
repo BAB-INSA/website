@@ -218,7 +218,6 @@ import {
   TrendingUpIcon,
   ClockIcon,
   PlusIcon,
-  UserPlusIcon,
   UsersIcon,
 } from 'lucide-vue-next'
 
@@ -361,7 +360,7 @@ const openNewMatchModal = () => {
   showCreateMatchModal.value = true
 }
 
-const handleMatchCreated = (match: any) => {
+const handleMatchCreated = (_match: Match) => {
   // Recharger les données après création d'un match
   loadRecentMatches()
   loadRecentEloChanges()
@@ -369,10 +368,6 @@ const handleMatchCreated = (match: any) => {
   loadStats()
 }
 
-const openAddPlayerModal = () => {
-  console.log('Opening add player modal...')
-  // TODO: Implement modal or navigation
-}
 
 const viewAllPlayers = () => {
   router.push({ name: 'PlayerList' })

@@ -32,6 +32,7 @@ import { toast } from 'vue-sonner'
 import CreateMatchForm from './CreateMatchForm.vue'
 import MatchService from '@/features/core/services/match.service'
 import type { MatchCreateData } from '@/features/core/services/match.service'
+import type { Match } from '@/features/core/types/match'
 
 // Props
 interface Props {
@@ -45,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
 // Emits
 const emit = defineEmits<{
   'update:open': [value: boolean]
-  'match-created': [match: any]
+  'match-created': [match: Match]
 }>()
 
 // State

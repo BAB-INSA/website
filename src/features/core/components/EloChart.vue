@@ -35,6 +35,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { Line } from 'vue-chartjs'
+import type { TooltipItem } from 'chart.js'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -142,7 +143,7 @@ const chartOptions = computed(() => {
         padding: 12,
         cornerRadius: 8,
         callbacks: {
-          title: (context: any) => {
+          title: (context: TooltipItem<'line'>[]) => {
             const index = context[0].dataIndex
             if (!props.eloHistory[index]) return ''
             const entry = props.eloHistory[index]
@@ -154,10 +155,10 @@ const chartOptions = computed(() => {
               day: 'numeric'
             })
           },
-          label: (context: any) => {
+          label: (context: TooltipItem<'line'>) => {
             return `ELO: ${context.parsed.y}`
           },
-          afterLabel: (context: any) => {
+          afterLabel: (context: TooltipItem<'line'>) => {
             const index = context.dataIndex
             if (!props.eloHistory[index]) return ''
             
@@ -193,7 +194,7 @@ const chartOptions = computed(() => {
         },
         ticks: {
           color: isDarkMode.value ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-          callback: function(value: any) {
+          callback: function(value: string | number) {
             return Math.round(value).toString()
           }
         }

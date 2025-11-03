@@ -226,7 +226,7 @@ import {
 import Spinner from '@/shared/components/ui/Spinner.vue'
 import MatchEditModal from './MatchEditModal.vue'
 
-const { permissions } = useAdmin()
+const { } = useAdmin()
 
 const matches = ref<Match[]>([])
 const loading = ref(false)
@@ -248,7 +248,7 @@ const showDeleteConfirm = ref(false)
 
 const filters = computed<MatchFilters>(() => ({
   player_id: searchQuery.value || undefined,
-  status: statusFilter.value === 'all' ? undefined : statusFilter.value as any,
+  status: statusFilter.value === 'all' ? undefined : statusFilter.value as 'pending' | 'confirmed' | 'rejected' | 'cancelled',
   date_from: dateFrom.value || undefined,
   date_to: dateTo.value || undefined
 }))
