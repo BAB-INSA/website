@@ -28,7 +28,7 @@ class ForgotPasswordService {
      * @returns Promise with the API response
      */
     async sendPasswordResetLink(data: ForgotPasswordRequest): Promise<unknown> {
-        const response = await apiClient.post('/api/users/reset-password/send-link', data)
+        const response = await apiClient.post('/auth/reset-password/send-link', data)
         return response.data
     }
 
@@ -38,7 +38,7 @@ class ForgotPasswordService {
      * @returns Promise with the API response
      */
     async confirmPasswordReset(data: ResetPasswordRequest): Promise<unknown> {
-        const response = await apiClient.post('/api/users/reset-password/confirm', data)
+        const response = await apiClient.post('/auth/users/reset-password/confirm', data)
         return response.data
     }
 }

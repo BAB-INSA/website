@@ -35,7 +35,7 @@ class PasswordService {
         }
 
         // Send both the current and new password for verification
-        const response = await apiClient.post<PasswordChangeResponse>('/api/users/change-password', {
+        const response = await apiClient.post<PasswordChangeResponse>('/auth/change-password', {
             currentPassword: data.currentPassword,
             newPassword: data.newPassword
         });
