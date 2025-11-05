@@ -16,6 +16,7 @@ import ResetPassword from '@/features/auth/views/ResetPassword.vue'
 import NotFound from '@/views/NotFound.vue'
 import PlayerMain from '@/features/core/views/player/profile/PlayerMain.vue'
 import PlayerList from '@/features/core/views/player/PlayerList.vue'
+import PlayerLeaderboard from '@/features/core/views/PlayerLeaderboard.vue'
 import { adminRoutes } from '@/features/admin/router/admin.routes'
 
 const routes: Array<RouteRecordRaw> = [
@@ -41,11 +42,11 @@ const routes: Array<RouteRecordRaw> = [
                         }
                     },
                     {
-                        path: 'elo-chart-demo',
-                        name: 'EloChartDemo',
-                        component: () => import('@/features/core/views/EloChartDemo.vue'),
+                        path: 'leaderboard',
+                        name: 'PlayerLeaderboard',
+                        component: PlayerLeaderboard,
                         meta: {
-                            title: 'Démo Graphique ELO'
+                            title: 'Classement Top 100'
                         }
                     },
                     {

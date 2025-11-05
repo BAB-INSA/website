@@ -1,95 +1,4 @@
 <!-- src/features/core/views/player/profile/PlayerProfile.vue -->
-<script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
-import { Badge } from '@/shared/components/ui/badge'
-import { Trophy, Target, TrendingUp, Clock, User } from 'lucide-vue-next'
-import PlayerService from '@/features/core/services/player.service'
-import PlayerLink from '@/features/core/components/PlayerLink.vue'
-import EloChart from '@/features/core/components/EloChart.vue'
-import type { Player, EloChartEntry } from '@/features/core/types/player'
-import type { Match } from '@/features/core/types/match'
-
-const route = useRoute()
-const playerId = computed(() => route.params.id as string)
-
-const playerData = ref<Player | null>(null)
-const recentMatches = ref<Match[]>([])
-const eloHistory = ref<EloChartEntry[]>([])
-const isLoading = ref(true)
-const isLoadingElo = ref(true)
-
-const winRate = computed(() => {
-  if (!playerData.value || playerData.value.total_matches === 0) return 0
-  return Math.round((playerData.value.wins / playerData.value.total_matches) * 100 * 10) / 10
-})
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
-
-const getMatchResult = (match: Match, currentPlayerId: number) => {
-  if (match.winner_id === currentPlayerId) return 'win'
-  if (match.winner_id && match.winner_id !== currentPlayerId) return 'loss'
-  return 'pending'
-}
-
-const getOpponent = (match: Match, currentPlayerId: number) => {
-  return match.player1_id === currentPlayerId ? match.player2 : match.player1
-}
-
-const loadPlayerData = async () => {
-  const id = parseInt(playerId.value)
-  if (isNaN(id)) return
-  
-  try {
-    isLoading.value = true
-    const [player, matchesResponse] = await Promise.all([
-      PlayerService.getPlayer(id),
-      PlayerService.getPlayerMatches(id, { page: 1, pageSize: 5 })
-    ])
-    playerData.value = player
-    recentMatches.value = matchesResponse.data
-    
-    // Charger l'historique ELO en parallèle
-    loadEloHistory(id)
-  } catch (error) {
-    console.error('Error fetching player data:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-// Watcher pour surveiller les changements d'ID dans l'URL
-watch(playerId, () => {
-  loadPlayerData()
-}, { immediate: true })
-
-onMounted(() => {
-  // Le watcher avec immediate: true gère déjà le chargement initial
-})
-
-const loadEloHistory = async (id: number) => {
-  try {
-    isLoadingElo.value = true
-    const history = await PlayerService.getPlayerEloHistory(id, 30) // 30 derniers matchs
-    eloHistory.value = history
-  } catch (error) {
-    console.error('Error fetching ELO history:', error)
-    eloHistory.value = []
-  } finally {
-    isLoadingElo.value = false
-  }
-}
-
-</script>
-
 <template>
   <div class="space-y-6">
     <div v-if="isLoading" class="text-center">
@@ -131,7 +40,7 @@ const loadEloHistory = async (id: number) => {
             <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
               <Target class="w-6 h-6 text-red-600" />
             </div>
-            <div class="text-3xl font-bold text-red-600 mb-2">{{ playerData.losses }}</div>
+            <div class="text-3xl font-bold text-red-600 mb-2">{{ getLosses(playerData) }}</div>
             <div class="text-sm font-medium text-muted-foreground">Défaites</div>
           </CardContent>
         </Card>
@@ -209,3 +118,96 @@ const loadEloHistory = async (id: number) => {
     </template>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Badge } from '@/shared/components/ui/badge'
+import { Trophy, Target, TrendingUp, Clock, User } from 'lucide-vue-next'
+import PlayerService from '@/features/core/services/player.service'
+import PlayerLink from '@/features/core/components/PlayerLink.vue'
+import EloChart from '@/features/core/components/EloChart.vue'
+import { usePlayer } from '@/features/core/composables/usePlayer'
+import type { Player, EloChartEntry } from '@/features/core/types/player'
+import type { Match } from '@/features/core/types/match'
+
+const route = useRoute()
+const playerId = computed(() => route.params.id as string)
+
+const playerData = ref<Player | null>(null)
+const recentMatches = ref<Match[]>([])
+const eloHistory = ref<EloChartEntry[]>([])
+const isLoading = ref(true)
+const isLoadingElo = ref(true)
+
+const { getWinRate, getLosses } = usePlayer()
+
+const winRate = computed(() => {
+  if (!playerData.value) return 0
+  return getWinRate(playerData.value)
+})
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const getMatchResult = (match: Match, currentPlayerId: number) => {
+  if (match.winner_id === currentPlayerId) return 'win'
+  if (match.winner_id && match.winner_id !== currentPlayerId) return 'loss'
+  return 'pending'
+}
+
+const getOpponent = (match: Match, currentPlayerId: number) => {
+  return match.player1_id === currentPlayerId ? match.player2 : match.player1
+}
+
+const loadPlayerData = async () => {
+  const id = parseInt(playerId.value)
+  if (isNaN(id)) return
+  
+  try {
+    isLoading.value = true
+    const [player, matchesResponse] = await Promise.all([
+      PlayerService.getPlayer(id),
+      PlayerService.getPlayerMatches(id, { page: 1, pageSize: 5 })
+    ])
+    playerData.value = player
+    recentMatches.value = matchesResponse.data
+    
+    // Charger l'historique ELO en parallèle
+    loadEloHistory(id)
+  } catch (error) {
+    console.error('Error fetching player data:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Watcher pour surveiller les changements d'ID dans l'URL
+watch(playerId, () => {
+  loadPlayerData()
+}, { immediate: true })
+
+onMounted(() => {
+  // Le watcher avec immediate: true gère déjà le chargement initial
+})
+
+const loadEloHistory = async (id: number) => {
+  try {
+    isLoadingElo.value = true
+    const history = await PlayerService.getPlayerEloHistory(id, 30) // 30 derniers matchs
+    eloHistory.value = history
+  } catch (error) {
+    console.error('Error fetching ELO history:', error)
+    eloHistory.value = []
+  } finally {
+    isLoadingElo.value = false
+  }
+}
+</script>

@@ -1,66 +1,4 @@
 <!-- src/features/core/views/player/PlayerList.vue -->
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { Users } from 'lucide-vue-next'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/shared/components/ui/pagination'
-import PlayerService from '@/features/core/services/player.service'
-import PlayerLink from '@/features/core/components/PlayerLink.vue'
-import type { Player } from '@/features/core/types/player'
-import type { PaginatedResponse } from '@/shared/types/pagination'
-
-const players = ref<Player[]>([])
-const paginationInfo = ref<PaginatedResponse<Player> | null>(null)
-const isLoading = ref(true)
-const currentPage = ref(1)
-const itemsPerPage = 10
-
-const totalPages = computed(() => paginationInfo.value?.totalPages || 1)
-const totalPlayers = computed(() => paginationInfo.value?.total || 0)
-
-const getWinRate = (player: Player) => {
-  if (player.total_matches === 0) return 0
-  return Math.round((player.wins / player.total_matches) * 100 * 10) / 10
-}
-
-const getLosses = (player: Player) => {
-  return player.total_matches - player.wins
-}
-
-const loadPlayers = async (page: number = currentPage.value) => {
-  try {
-    isLoading.value = true
-    const response = await PlayerService.getPlayers({
-      page,
-      pageSize: itemsPerPage
-    })
-    paginationInfo.value = response
-    players.value = response.data
-    currentPage.value = page
-  } catch (error) {
-    console.error('Error fetching players:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const onPageChange = (page: number) => {
-  if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
-    loadPlayers(page)
-  }
-}
-
-onMounted(() => {
-  loadPlayers(1)
-})
-</script>
-
 <template>
   <div class="space-y-6">
     <!-- Header -->
@@ -139,3 +77,59 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { Users } from 'lucide-vue-next'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/shared/components/ui/pagination'
+import PlayerService from '@/features/core/services/player.service'
+import PlayerLink from '@/features/core/components/PlayerLink.vue'
+import { usePlayer } from '@/features/core/composables/usePlayer'
+import type { Player } from '@/features/core/types/player'
+import type { PaginatedResponse } from '@/shared/types/pagination'
+
+const players = ref<Player[]>([])
+const paginationInfo = ref<PaginatedResponse<Player> | null>(null)
+const isLoading = ref(true)
+const currentPage = ref(1)
+const itemsPerPage = 10
+
+const totalPages = computed(() => paginationInfo.value?.totalPages || 1)
+const totalPlayers = computed(() => paginationInfo.value?.total || 0)
+
+const { getWinRate, getLosses } = usePlayer()
+
+const loadPlayers = async (page: number = currentPage.value) => {
+  try {
+    isLoading.value = true
+    const response = await PlayerService.getPlayers({
+      page,
+      pageSize: itemsPerPage
+    })
+    paginationInfo.value = response
+    players.value = response.data
+    currentPage.value = page
+  } catch (error) {
+    console.error('Error fetching players:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const onPageChange = (page: number) => {
+  if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
+    loadPlayers(page)
+  }
+}
+
+onMounted(() => {
+  loadPlayers(1)
+})
+</script>

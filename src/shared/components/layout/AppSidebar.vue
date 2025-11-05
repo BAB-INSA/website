@@ -51,6 +51,14 @@ watch(() => router.currentRoute.value.path, () => {
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'PlayerLeaderboard'}">
+                  <Trophy />
+                  <span>Classement</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>

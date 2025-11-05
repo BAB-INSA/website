@@ -16,7 +16,7 @@
             :key="player.id" 
             :value="player.id.toString()"
           >
-            {{ player.username }} (ELO: {{ player.elo_rating }})
+            {{ player.username }} (ELO: {{ (player as any).elo_rating || 1000 }})
           </SelectItem>
         </SelectContent>
       </Select>
@@ -75,9 +75,9 @@
       <h4 class="font-medium mb-2">Résumé du match</h4>
       <div class="text-sm space-y-1">
         <div>
-          <strong>{{ currentUser?.username }}</strong> (ELO: {{ currentUser?.elo_rating }}) 
+          <strong>{{ currentUser?.username }}</strong> (ELO: {{ (currentUser as any)?.elo_rating || 1000 }}) 
           vs 
-          <strong>{{ selectedOpponent.username }}</strong> (ELO: {{ selectedOpponent.elo_rating }})
+          <strong>{{ selectedOpponent.username }}</strong> (ELO: {{ (selectedOpponent as any).elo_rating || 1000 }})
         </div>
         <div v-if="winnerId" class="text-primary">
           🏆 Gagnant : {{ winnerId === currentUserId ? currentUser?.username : selectedOpponent.username }}

@@ -79,7 +79,7 @@
               <div class="flex-1 min-w-0">
                 <PlayerLink :player="player" class="text-left" />
                 <p class="text-sm text-muted-foreground">
-                  {{ player.wins }}V / {{ player.losses }}D
+                  {{ getWinLossRecord(player) }}
                 </p>
               </div>
               <div class="text-right">
@@ -200,6 +200,7 @@ import playerService from '@/features/core/services/player.service'
 import matchService from '@/features/core/services/match.service'
 import eloHistoryService from '@/features/core/services/elo-history.service'
 import statsService, { type Stats } from '@/features/core/services/stats.service'
+import { usePlayer } from '@/features/core/composables/usePlayer'
 import {
   Card,
   CardContent,
@@ -273,6 +274,7 @@ const stats = computed(() => {
 
 // Utility functions
 const { formatRelativeTime } = useDateFormatter()
+const { getWinLossRecord } = usePlayer()
 
 const getPlayer = (playerId: number): Player | null => {
   return topPlayersData.value.find(p => p.id === playerId) || null
@@ -287,12 +289,8 @@ const getPlayerName = (playerId: number): string => {
 const loadTopPlayers = async () => {
   try {
     isLoading.value = true
-    // Use getPlayers with pagination to get all players, then take top 10
-    const response = await playerService.getPlayers({ page: 1, pageSize: 50 })
-    // Sort by ELO rating descending and take top 10
-    topPlayersData.value = response.data
-      .sort((a, b) => b.elo_rating - a.elo_rating)
-      .slice(0, 10)
+    // Use getTopPlayers with limit 10 for dashboard
+    topPlayersData.value = await playerService.getTopPlayers(10)
   } catch (error) {
     console.error('Error loading top players:', error)
   } finally {
