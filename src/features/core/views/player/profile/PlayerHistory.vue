@@ -1,108 +1,4 @@
 <!-- src/features/core/views/player/profile/PlayerHistory.vue -->
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
-import { Badge } from '@/shared/components/ui/badge'
-import { User, Clock } from 'lucide-vue-next'
-import PlayerService from '@/features/core/services/player.service'
-import PlayerLink from '@/features/core/components/PlayerLink.vue'
-import type { Match } from '@/features/core/types/match'
-import type { PaginatedResponse } from '@/shared/types/pagination'
-
-const route = useRoute()
-const playerId = computed(() => route.params.id as string)
-
-const matches = ref<Match[]>([])
-const paginationInfo = ref<PaginatedResponse<Match> | null>(null)
-const isLoading = ref(true)
-const currentPage = ref(1)
-const pageSize = ref(10)
-
-const selectedFilter = ref('all')
-
-const getMatchResult = (match: Match, currentPlayerId: number) => {
-  if (match.winner_id === currentPlayerId) return 'win'
-  if (match.winner_id && match.winner_id !== currentPlayerId) return 'loss'
-  return 'pending'
-}
-
-const getOpponent = (match: Match, currentPlayerId: number) => {
-  return match.player1_id === currentPlayerId ? match.player2 : match.player1
-}
-
-const stats = computed(() => {
-  const total = matches.value.length
-  const wins = matches.value.filter(m => getMatchResult(m, parseInt(playerId.value)) === 'win').length
-  const losses = matches.value.filter(m => getMatchResult(m, parseInt(playerId.value)) === 'loss').length
-  const winRate = total > 0 ? Math.round((wins / total) * 100) : 0
-
-  return { total, wins, losses, winRate }
-})
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
-
-const loadMatches = async (page: number = currentPage.value, append: boolean = false) => {
-  try {
-    isLoading.value = true
-    const id = parseInt(playerId.value)
-    if (!isNaN(id)) {
-      const params: Record<string, string | number> = {
-        page,
-        pageSize: pageSize.value
-      }
-      
-      // Ajouter les filtres si nécessaire
-      if (selectedFilter.value === 'win') {
-        params.wins = 1
-      } else if (selectedFilter.value === 'loss') {
-        params.losses = 1
-      }
-      
-      const response = await PlayerService.getPlayerMatches(id, params)
-      paginationInfo.value = response
-      
-      if (append) {
-        matches.value = [...matches.value, ...response.data]
-      } else {
-        matches.value = response.data
-      }
-      
-      currentPage.value = page
-    }
-  } catch (error) {
-    console.error('Error fetching match history:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const loadMore = () => {
-  if (paginationInfo.value && currentPage.value < paginationInfo.value.totalPages) {
-    loadMatches(currentPage.value + 1, true)
-  }
-}
-
-const changeFilter = (newFilter: string) => {
-  selectedFilter.value = newFilter
-  currentPage.value = 1
-  loadMatches(1, false)
-}
-
-
-onMounted(() => {
-  loadMatches(1)
-})
-</script>
-
 <template>
   <div class="space-y-6">
     <div v-if="isLoading" class="text-center">
@@ -227,3 +123,107 @@ onMounted(() => {
     </template>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Badge } from '@/shared/components/ui/badge'
+import { Button } from '@/shared/components/ui/button'
+import { User, Clock } from 'lucide-vue-next'
+import PlayerService from '@/features/core/services/player.service'
+import PlayerLink from '@/features/core/components/PlayerLink.vue'
+import type { Match } from '@/features/core/types/match'
+import type { PaginatedResponse } from '@/shared/types/pagination'
+
+const route = useRoute()
+const playerId = computed(() => route.params.id as string)
+
+const matches = ref<Match[]>([])
+const paginationInfo = ref<PaginatedResponse<Match> | null>(null)
+const isLoading = ref(true)
+const currentPage = ref(1)
+const pageSize = ref(10)
+
+const selectedFilter = ref('all')
+
+const getMatchResult = (match: Match, currentPlayerId: number) => {
+  if (match.winner_id === currentPlayerId) return 'win'
+  if (match.winner_id && match.winner_id !== currentPlayerId) return 'loss'
+  return 'pending'
+}
+
+const getOpponent = (match: Match, currentPlayerId: number) => {
+  return match.player1_id === currentPlayerId ? match.player2 : match.player1
+}
+
+const stats = computed(() => {
+  const total = matches.value.length
+  const wins = matches.value.filter(m => getMatchResult(m, parseInt(playerId.value)) === 'win').length
+  const losses = matches.value.filter(m => getMatchResult(m, parseInt(playerId.value)) === 'loss').length
+  const winRate = total > 0 ? Math.round((wins / total) * 100) : 0
+
+  return { total, wins, losses, winRate }
+})
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const loadMatches = async (page: number = currentPage.value, append: boolean = false) => {
+  try {
+    isLoading.value = true
+    const id = parseInt(playerId.value)
+    if (!isNaN(id)) {
+      const params: Record<string, string | number> = {
+        page,
+        pageSize: pageSize.value
+      }
+      
+      // Ajouter les filtres si nécessaire
+      if (selectedFilter.value === 'win') {
+        params.wins = 1
+      } else if (selectedFilter.value === 'loss') {
+        params.losses = 1
+      }
+      
+      const response = await PlayerService.getPlayerMatches(id, params)
+      paginationInfo.value = response
+      
+      if (append) {
+        matches.value = [...matches.value, ...response.data]
+      } else {
+        matches.value = response.data
+      }
+      
+      currentPage.value = page
+    }
+  } catch (error) {
+    console.error('Error fetching match history:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const loadMore = () => {
+  if (paginationInfo.value && currentPage.value < paginationInfo.value.totalPages) {
+    loadMatches(currentPage.value + 1, true)
+  }
+}
+
+const changeFilter = (newFilter: string) => {
+  selectedFilter.value = newFilter
+  currentPage.value = 1
+  loadMatches(1, false)
+}
+
+onMounted(() => {
+  loadMatches(1)
+})
+</script>

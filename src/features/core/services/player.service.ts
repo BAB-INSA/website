@@ -18,8 +18,8 @@ class PlayerService {
         return response.data
     }
 
-    async getTopPlayers(): Promise<Player[]> {
-        const response = await apiClient.get('/players/top')
+    async getTopPlayers(limit: number = 100): Promise<Player[]> {
+        const response = await apiClient.get(`/players/top?limit=${limit}`)
         return response.data
     }
 

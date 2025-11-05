@@ -1,4 +1,47 @@
 <!-- src/features/core/views/player/profile/PlayerMain.vue -->
+<template>
+  <div class="container mx-auto p-6 space-y-6">
+    <div v-if="isLoading" class="text-center">
+      <div class="text-lg">Chargement...</div>
+    </div>
+    
+    <div v-else-if="!playerData" class="text-center">
+      <div class="text-lg text-red-600">Joueur introuvable</div>
+    </div>
+    
+    <template v-else>
+      <Card>
+        <CardHeader class="pb-4">
+          <div class="flex items-center gap-4">
+            <Avatar class="h-16 w-16">
+              <AvatarFallback class="text-lg">{{ getPlayerInitials(playerData.username) }}</AvatarFallback>
+            </Avatar>
+            <div class="flex-1">
+              <CardTitle class="text-2xl">{{ playerData.username }}</CardTitle>
+              <p class="text-muted-foreground">Membre depuis le {{ formatDate(playerData.created_at) }}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-sm text-muted-foreground">ELO Rating</div>
+              <div class="text-2xl font-bold">{{ playerData.elo_rating }}</div>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
+      <Tabs :model-value="activeTab" @update:model-value="handleTabChange" class="w-full">
+        <TabsList class="grid w-full grid-cols-2">
+          <TabsTrigger value="profile">Profil</TabsTrigger>
+          <TabsTrigger value="history">Historique</TabsTrigger>
+        </TabsList>
+
+        <div class="mt-6">
+          <router-view />
+        </div>
+      </Tabs>
+    </template>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -49,46 +92,3 @@ const getPlayerInitials = (username: string) => {
   return username.slice(0, 2).toUpperCase()
 }
 </script>
-
-<template>
-  <div class="container mx-auto p-6 space-y-6">
-    <div v-if="isLoading" class="text-center">
-      <div class="text-lg">Chargement...</div>
-    </div>
-    
-    <div v-else-if="!playerData" class="text-center">
-      <div class="text-lg text-red-600">Joueur introuvable</div>
-    </div>
-    
-    <template v-else>
-      <Card>
-        <CardHeader class="pb-4">
-          <div class="flex items-center gap-4">
-            <Avatar class="h-16 w-16">
-              <AvatarFallback class="text-lg">{{ getPlayerInitials(playerData.username) }}</AvatarFallback>
-            </Avatar>
-            <div class="flex-1">
-              <CardTitle class="text-2xl">{{ playerData.username }}</CardTitle>
-              <p class="text-muted-foreground">Membre depuis le {{ formatDate(playerData.created_at) }}</p>
-            </div>
-            <div class="text-right">
-              <div class="text-sm text-muted-foreground">ELO Rating</div>
-              <div class="text-2xl font-bold">{{ playerData.elo_rating }}</div>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-      <Tabs :model-value="activeTab" @update:model-value="handleTabChange" class="w-full">
-        <TabsList class="grid w-full grid-cols-2">
-          <TabsTrigger value="profile">Profil</TabsTrigger>
-          <TabsTrigger value="history">Historique</TabsTrigger>
-        </TabsList>
-
-        <div class="mt-6">
-          <router-view />
-        </div>
-      </Tabs>
-    </template>
-  </div>
-</template>

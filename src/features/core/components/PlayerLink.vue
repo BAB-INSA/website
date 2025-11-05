@@ -1,4 +1,16 @@
 <!-- src/shared/components/PlayerLink.vue -->
+<template>
+  <button
+    @click="navigateToProfile"
+    :class="[
+      'text-primary hover:text-primary/80 hover:underline transition-colors cursor-pointer font-medium',
+      props.class
+    ]"
+  >
+    {{ displayText }}
+  </button>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -28,15 +40,3 @@ const navigateToProfile = () => {
   router.push(`/player/${props.player.id}/profile`)
 }
 </script>
-
-<template>
-  <button
-    @click="navigateToProfile"
-    :class="[
-      'text-primary hover:text-primary/80 hover:underline transition-colors cursor-pointer font-medium',
-      props.class
-    ]"
-  >
-    {{ displayText }}
-  </button>
-</template>
