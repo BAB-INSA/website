@@ -35,12 +35,17 @@ const {
 } = usePWA()
 
 /**
+ * Development mode check
+ */
+const isDev = computed(() => import.meta.env.DEV)
+
+/**
  * Get connection status with appropriate styling
  */
 const connectionStatus = computed(() => {
   return {
     label: isOnline.value ? 'En ligne' : 'Hors ligne',
-    variant: isOnline.value ? 'default' : 'destructive',
+    variant: (isOnline.value ? 'default' : 'destructive') as 'default' | 'destructive',
     icon: isOnline.value ? Wifi : WifiOff
   }
 })
@@ -51,7 +56,7 @@ const connectionStatus = computed(() => {
 const appModeStatus = computed(() => {
   return {
     label: isPWA.value ? 'Mode PWA' : 'Mode Navigateur',
-    variant: isPWA.value ? 'default' : 'secondary',
+    variant: (isPWA.value ? 'default' : 'secondary') as 'default' | 'secondary',
     icon: Smartphone
   }
 })
@@ -107,7 +112,7 @@ const installStatus = computed(() => {
 const offlineStatus = computed(() => {
   return {
     label: offlineReady.value ? 'Prêt' : 'Chargement',
-    variant: offlineReady.value ? 'default' : 'secondary',
+    variant: (offlineReady.value ? 'default' : 'secondary') as 'default' | 'secondary',
     icon: offlineReady.value ? Shield : Clock
   }
 })
@@ -118,7 +123,7 @@ const offlineStatus = computed(() => {
 const updateStatus = computed(() => {
   return {
     label: updateAvailable.value ? 'Mise à jour disponible' : 'À jour',
-    variant: updateAvailable.value ? 'destructive' : 'default',
+    variant: (updateAvailable.value ? 'destructive' : 'default') as 'destructive' | 'default',
     icon: RefreshCw
   }
 })
@@ -295,13 +300,12 @@ const handleUpdate = async () => {
     </div>
 
     <!-- Debug Information (only in development) -->
-    <div v-if="$env?.DEV" class="mt-4 p-3 bg-gray-50 rounded-lg text-xs">
+    <div v-if="isDev" class="mt-4 p-3 bg-gray-50 rounded-lg text-xs">
       <strong>Debug Info:</strong><br>
       Can Install: {{ canInstall }}<br>
       Is PWA: {{ isPWA }}<br>
-      beforeinstallprompt: {{ 'beforeinstallprompt' in window }}<br>
-      Standalone: {{ window.matchMedia('(display-mode: standalone)').matches }}<br>
-      User Agent: {{ navigator.userAgent.substring(0, 50) }}...
+      Offline Ready: {{ offlineReady }}<br>
+      Update Available: {{ updateAvailable }}
     </div>
   </div>
 </template>

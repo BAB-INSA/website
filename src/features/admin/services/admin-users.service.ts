@@ -41,6 +41,10 @@ class AdminUsersService {
         const response = await apiClient.patch(`/users/${userId}`, data)
         return response.data
     }
+
+    async deleteUser(userId: number): Promise<void> {
+        await apiClient.delete(`/users/${userId}`)
+    }
 }
 
 export default new AdminUsersService()

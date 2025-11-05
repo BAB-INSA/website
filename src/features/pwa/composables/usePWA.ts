@@ -281,8 +281,8 @@ export function usePWA() {
         window.addEventListener('offline', handleOnlineChange)
 
         // Listen to PWA service events instead of direct browser events
-        window.addEventListener('pwa:install-prompt-ready', handleInstallPromptReady)
-        window.addEventListener('pwa:app-installed', handleAppInstalled)
+        window.addEventListener('pwa:install-prompt-ready', handleInstallPromptReady as EventListener)
+        window.addEventListener('pwa:app-installed', handleAppInstalled as EventListener)
 
         // PWA custom events
         window.addEventListener('pwa:offline-ready', handlePWAEvents)
@@ -304,8 +304,8 @@ export function usePWA() {
         // Clean up event listeners
         window.removeEventListener('online', handleOnlineChange)
         window.removeEventListener('offline', handleOnlineChange)
-        window.removeEventListener('pwa:install-prompt-ready', handleInstallPromptReady)
-        window.removeEventListener('pwa:app-installed', handleAppInstalled)
+        window.removeEventListener('pwa:install-prompt-ready', handleInstallPromptReady as EventListener)
+        window.removeEventListener('pwa:app-installed', handleAppInstalled as EventListener)
 
         // PWA custom events
         window.removeEventListener('pwa:offline-ready', handlePWAEvents)

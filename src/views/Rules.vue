@@ -144,13 +144,13 @@ const rulesData = {
 const getSeverityBadge = (severity: string) => {
   switch (severity) {
     case 'high':
-      return { variant: 'destructive', text: 'Strict' }
+      return { variant: 'destructive' as const, text: 'Strict' }
     case 'medium':
-      return { variant: 'default', text: 'Important' }
+      return { variant: 'default' as const, text: 'Important' }
     case 'low':
-      return { variant: 'secondary', text: 'Recommandé' }
+      return { variant: 'secondary' as const, text: 'Recommandé' }
     default:
-      return { variant: 'outline', text: 'Info' }
+      return { variant: 'outline' as const, text: 'Info' }
   }
 }
 </script>
