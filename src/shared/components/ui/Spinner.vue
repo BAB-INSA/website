@@ -42,7 +42,7 @@ const sizeClass = {
   <svg
       class="animate-spin"
       :class="[
-      sizeClass[size],
+      sizeClass[size as keyof typeof sizeClass],
       color,
       mr ? 'mr-3' : '',
       ml ? 'ml-3' : ''

@@ -10,13 +10,13 @@ interface PWAInstallEvent extends Event {
 }
 
 /**
- * Workbox Event interface
+ * Workbox Event interface - kept for potential future use
  */
-interface WorkboxEvent {
-    isUpdate?: boolean
-    type: string
-    target: Workbox
-}
+// interface WorkboxEvent {
+//     isUpdate?: boolean
+//     type: string
+//     target: Workbox
+// }
 
 /**
  * Service Worker Message interface
@@ -123,7 +123,7 @@ class PWAService {
         if (!this.wb) return
 
         // Service worker installed for the first time
-        this.wb.addEventListener('installed', (event: WorkboxEvent) => {
+        this.wb.addEventListener('installed', (event) => {
             console.log('🎉 PWA installed successfully')
             this.offlineReady = true
 
@@ -149,7 +149,7 @@ class PWAService {
         })
 
         // Service worker activation
-        this.wb.addEventListener('activated', (event: WorkboxEvent) => {
+        this.wb.addEventListener('activated', (event) => {
             if (event.isUpdate) {
                 console.log('🚀 PWA updated and activated')
             }

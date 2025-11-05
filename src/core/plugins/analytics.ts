@@ -14,7 +14,7 @@ const analyticsPlugin = {
      * @param app Vue application instance
      * @param router
      */
-    install(app: App, router: { router: Router }): void {
+    install(app: App, router: Router): void {
         const gaId = import.meta.env.VITE_GA_MEASUREMENT_ID || ''
         const environment = import.meta.env.VITE_ENV || 'development'
         const isDevelopment = import.meta.env.DEV

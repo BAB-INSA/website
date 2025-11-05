@@ -4,7 +4,7 @@ import router from '@/core/router'
 import toastService from '@/shared/services/toast.service.ts'
 
 // Enable debug mode in development
-const DEBUG = process.env.NODE_ENV === 'development'
+const DEBUG = import.meta.env.DEV
 
 // Flag to prevent multiple logout notifications
 let isHandlingLogout = false

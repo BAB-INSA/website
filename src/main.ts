@@ -20,7 +20,7 @@ const app = createApp(App)
     // Initialize authentication plugin after Pinia and router
     .use(authPlugin, { router })
     // Initialize analytics plugin with router for automatic tracking
-    .use(analyticsPlugin, { router })
+    .use(analyticsPlugin, router)
     // Authorization directive
     .use(authDirective)
     .use(pwaPlugin)
