@@ -112,7 +112,7 @@ const handleRegister = async () => {
     const userData = {
       username: username.value,
       email: email.value,
-      plainPassword: password.value
+      password: password.value
     }
 
     await registerService.register(userData)

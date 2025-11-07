@@ -107,7 +107,7 @@ const handleSubmit = async () => {
   try {
     await forgotPasswordService.confirmPasswordReset({
       token: token.value,
-      plainPassword: password.value
+      newPassword: password.value
     })
 
     // Show success notification
