@@ -14,7 +14,7 @@ interface ForgotPasswordRequest {
  */
 interface ResetPasswordRequest {
     token: string
-    plainPassword: string
+    newPassword: string
 }
 
 /**

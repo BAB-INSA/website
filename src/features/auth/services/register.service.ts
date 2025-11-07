@@ -6,7 +6,7 @@ import apiClient from '@/core/lib/axios.ts'
 interface RegisterData {
     username: string
     email: string
-    plainPassword: string
+    password: string
 }
 
 interface RegisterResponse {
@@ -25,7 +25,7 @@ class RegisterService {
      * @returns Promise with the API response
      */
     async register(userData: RegisterData): Promise<RegisterResponse> {
-        const response = await apiClient.post<RegisterResponse>('/users', userData)
+        const response = await apiClient.post<RegisterResponse>('/auth/register', userData)
         return response.data
     }
 }
