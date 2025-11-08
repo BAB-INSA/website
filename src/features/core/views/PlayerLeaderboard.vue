@@ -52,7 +52,7 @@
                   :class="getRankColor(index)"
                 />
                 <span class="font-bold text-lg" :class="getRankColor(index)">
-                  #{{ index + 1 }}
+                  #{{ player.rank ?? (index + 1) }}
                 </span>
               </div>
             </td>

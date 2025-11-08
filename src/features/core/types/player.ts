@@ -12,6 +12,7 @@ export interface Player {
     best_win_streak: number
     created_at: string
     updated_at: string
+    rank?: number
 }
 
 /**
