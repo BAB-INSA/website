@@ -1,11 +1,12 @@
 <template>
   <div class="space-y-8">
-    <!-- Welcome Header -->
-    <div class="flex flex-col space-y-2">
-      <h1 class="text-3xl font-bold tracking-tight">Baby-Foot Dashboard</h1>
-      <p class="text-muted-foreground">
-        Suivez les statistiques, classements et derniers matchs de baby-foot
-      </p>
+    <!-- Header avec logo BAB'INSA -->
+    <div class="flex flex-col items-center space-y-6">
+      <img 
+        src="/header-logo.svg" 
+        alt="BAB'INSA - Association Baby-foot INSA Rouen" 
+        class="h-24 md:h-28 w-auto"
+      />
     </div>
 
     <!-- Stats Overview -->
