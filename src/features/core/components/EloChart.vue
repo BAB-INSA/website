@@ -2,9 +2,11 @@
 <template>
   <div class="w-full">
     <div class="mb-4">
-      <h3 class="text-lg font-semibold mb-2">Évolution du rating ELO</h3>
+      <h3 class="text-lg font-semibold mb-2">
+        Évolution du rating ELO {{ matchType === 'team' ? '2v2' : '1v1' }}
+      </h3>
       <p class="text-sm text-muted-foreground">
-        Historique des performances sur les derniers matchs
+        Historique des performances {{ matchType === 'team' ? 'en équipe' : 'en solo' }} sur les derniers matchs
       </p>
     </div>
     
@@ -67,11 +69,13 @@ interface Props {
   playerId: number
   eloHistory?: EloChartEntry[]
   isLoading?: boolean
+  matchType?: 'solo' | 'team'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   eloHistory: () => [],
-  isLoading: false
+  isLoading: false,
+  matchType: 'solo'
 })
 
 // State

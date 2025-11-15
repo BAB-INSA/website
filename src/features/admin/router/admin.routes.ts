@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import AdminUsers from '@/features/admin/views/AdminUsers.vue'
 import AdminMatches from '@/features/admin/views/AdminMatches.vue'
+import AdminTeamMatches from '@/features/admin/views/AdminTeamMatches.vue'
 
 export const adminRoutes: RouteRecordRaw[] = [
     {
@@ -21,6 +22,16 @@ export const adminRoutes: RouteRecordRaw[] = [
             requiresAuth: true,
             requiresAdmin: true,
             title: 'Administration - Gestion des matchs'
+        }
+    },
+    {
+        path: 'admin/team-matches',
+        name: 'AdminTeamMatches',
+        component: AdminTeamMatches,
+        meta: { 
+            requiresAuth: true,
+            requiresAdmin: true,
+            title: 'Administration - Gestion des matchs 2v2'
         }
     }
     // Ici on pourra ajouter d'autres routes admin plus tard :

@@ -45,17 +45,26 @@ watch(() => router.currentRoute.value.path, () => {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'PlayerLeaderboard'}">
+                  <Trophy />
+                  <span>Classement</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
                 <RouterLink :to="{name: 'PlayerList'}">
                   <Users />
                   <span>Liste des Joueurs</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <RouterLink :to="{name: 'PlayerLeaderboard'}">
-                  <Trophy />
-                  <span>Classement</span>
+                <RouterLink :to="{name: 'TeamList'}">
+                  <Users />
+                  <span>Liste des Équipes</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -80,7 +89,15 @@ watch(() => router.currentRoute.value.path, () => {
               <SidebarMenuButton asChild>
                 <RouterLink :to="{name: 'AdminMatches'}">
                   <Trophy />
-                  <span>Gestion des matchs</span>
+                  <span>Gestion des matchs 1v1</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'AdminTeamMatches'}">
+                  <Users />
+                  <span>Gestion des matchs 2v2</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

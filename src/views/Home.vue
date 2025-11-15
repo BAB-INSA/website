@@ -10,7 +10,7 @@
     </div>
 
     <!-- Stats Overview -->
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle class="text-sm font-medium">Total Joueurs</CardTitle>
@@ -24,7 +24,7 @@
 
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle class="text-sm font-medium">Matchs Totaux</CardTitle>
+          <CardTitle class="text-sm font-medium">Matchs 1v1</CardTitle>
           <TrophyIcon class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -35,62 +35,125 @@
 
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle class="text-sm font-medium">Matchs 7 derniers jours</CardTitle>
+          <CardTitle class="text-sm font-medium">Matchs 1v1 (7j)</CardTitle>
           <CalendarIcon class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div class="text-2xl font-bold">{{ stats.weekMatches }}</div>
           <p class="text-xs text-muted-foreground">
-            <span class="text-green-600">+{{ stats.weekMatchesChange }}%</span> vs semaine précédente
+            <span :class="stats.weekMatchesChange >= 0 ? 'text-green-600' : 'text-red-600'">
+              {{ stats.weekMatchesChange >= 0 ? '+' : '' }}{{ stats.weekMatchesChange }}%
+            </span> vs semaine précédente
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle class="text-sm font-medium">ELO Moyen</CardTitle>
-          <TrendingUpIcon class="h-4 w-4 text-muted-foreground" />
+          <CardTitle class="text-sm font-medium">Total Équipes</CardTitle>
+          <UsersIcon class="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div class="text-2xl font-bold">{{ Math.round(stats.averageElo) }}</div>
-          <p class="text-xs text-muted-foreground">Points ELO</p>
+          <div class="text-2xl font-bold">{{ stats.totalTeams }}</div>
+          <p class="text-xs text-muted-foreground">Équipes actives</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle class="text-sm font-medium">Matchs 2v2</CardTitle>
+          <UsersIcon class="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div class="text-2xl font-bold">{{ stats.totalTeamMatches }}</div>
+          <p class="text-xs text-muted-foreground">Matchs équipes</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle class="text-sm font-medium">Matchs 2v2 (7j)</CardTitle>
+          <CalendarIcon class="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div class="text-2xl font-bold">{{ stats.teamWeekMatches }}</div>
+          <p class="text-xs text-muted-foreground">
+            <span :class="stats.teamWeekMatchesChange >= 0 ? 'text-green-600' : 'text-red-600'">
+              {{ stats.teamWeekMatchesChange >= 0 ? '+' : '' }}{{ stats.teamWeekMatchesChange }}%
+            </span> vs semaine précédente
+          </p>
         </CardContent>
       </Card>
     </div>
 
     <!-- Main Content Grid -->
     <div class="grid gap-6 lg:grid-cols-3">
-      <!-- Left Column: Leaderboard -->
-      <div class="lg:col-span-1 space-y-6">
-        <!-- Top 10 ELO Players -->
-        <Card>
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2">
-              <TrophyIcon class="h-5 w-5" />
-              Top 10 Classement ELO
-            </CardTitle>
-            <CardDescription>Les meilleurs joueurs par points ELO</CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4">
-            <div v-for="(player, index) in topPlayers" :key="player.id" class="flex items-center gap-3">
-              <div class="flex h-8 w-8 items-center justify-center rounded-full" 
-                   :class="getRankBadgeClass(index)">
-                <span class="text-sm font-bold">{{ index + 1 }}</span>
+      <!-- Left Column: Leaderboards -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Classements ELO -->
+        <div class="grid gap-6 md:grid-cols-2">
+          <!-- Top 10 ELO Players 1v1 -->
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <TrophyIcon class="h-5 w-5" />
+                Top 10 Classement 1v1
+              </CardTitle>
+              <CardDescription>Les meilleurs joueurs par points ELO 1v1</CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              <div v-for="(player, index) in topPlayers" :key="player.id" class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                     :class="getRankBadgeClass(index)">
+                  <span class="text-sm font-bold">{{ index + 1 }}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <PlayerLink :player="player" class="text-left" />
+                  <p class="text-sm text-muted-foreground">
+                    {{ getWinLossRecord(player) }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="font-bold">{{ Math.round(player.elo_rating) }}</p>
+                  <p class="text-xs text-muted-foreground">ELO</p>
+                </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <PlayerLink :player="player" class="text-left" />
-                <p class="text-sm text-muted-foreground">
-                  {{ getWinLossRecord(player) }}
-                </p>
-              </div>
-              <div class="text-right">
-                <p class="font-bold">{{ Math.round(player.elo_rating) }}</p>
-                <p class="text-xs text-muted-foreground">ELO</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
+          <!-- Top 10 Players 2v2 -->
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <UsersIcon class="h-5 w-5" />
+                Top 10 Classement 2v2
+              </CardTitle>
+              <CardDescription>Les meilleurs joueurs en 2v2 par points ELO</CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              <div v-for="(player, index) in topTeams" :key="`team-${player.id}`" class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full" 
+                     :class="getRankBadgeClass(index)">
+                  <span class="text-sm font-bold">{{ index + 1 }}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <PlayerLink :player="player" class="text-left" />
+                  <p class="text-sm text-muted-foreground">
+                    {{ getTeamWinLossRecord(player) }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="font-bold">{{ Math.round(player.team_elo_rating) }}</p>
+                  <p class="text-xs text-muted-foreground">ELO 2v2</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Right Column: Actions and Recent Activity -->
+      <div class="lg:col-span-1 space-y-6">
         <!-- Quick Actions -->
         <Card>
           <CardHeader>
@@ -99,18 +162,22 @@
           <CardContent class="space-y-3">
             <Button v-if="authStore.isAuthenticated" @click="openNewMatchModal" class="w-full justify-start" variant="outline">
               <PlusIcon class="mr-2 h-4 w-4" />
-              Nouveau Match
+              Nouveau Match 1v1
+            </Button>
+            <Button v-if="authStore.isAuthenticated" @click="openNewTeamMatchModal" class="w-full justify-start" variant="outline">
+              <TrophyIcon class="mr-2 h-4 w-4" />
+              Nouveau Match 2v2
+            </Button>
+            <Button v-if="authStore.isAuthenticated" @click="openNewTeamModal" class="w-full justify-start" variant="outline">
+              <UsersIcon class="mr-2 h-4 w-4" />
+              Créer une Équipe
             </Button>
             <Button @click="viewAllPlayers" class="w-full justify-start" variant="outline">
-              <UsersIcon class="mr-2 h-4 w-4" />
+              <UserIcon class="mr-2 h-4 w-4" />
               Voir Tous les Joueurs
             </Button>
           </CardContent>
         </Card>
-      </div>
-
-      <!-- Right Column: Recent Activity -->
-      <div class="lg:col-span-2 space-y-6">
         <!-- Recent Matches -->
         <Card>
           <CardHeader>
@@ -149,36 +216,6 @@
         </Card>
 
 
-        <!-- Recent ELO Changes -->
-        <Card>
-          <CardHeader>
-            <CardTitle>Changements ELO Récents</CardTitle>
-            <CardDescription>Dernières variations de points ELO</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-3">
-              <div v-for="change in recentEloChanges" :key="change.id" 
-                   class="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                <div class="flex items-center gap-3">
-                  <PlayerLink v-if="getPlayer(change.player_id)" :player="getPlayer(change.player_id)!" class="font-medium" />
-                  <span v-else class="font-medium">{{ getPlayerName(change.player_id) }}</span>
-                  <span class="text-sm text-muted-foreground">vs 
-                    <PlayerLink v-if="change.opponent_id && getPlayer(change.opponent_id)" :player="getPlayer(change.opponent_id)!" />
-                    <span v-else>{{ getPlayerName(change.opponent_id || 0) }}</span>
-                  </span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span :class="change.elo_change > 0 ? 'text-green-600' : 'text-red-600'" class="font-bold">
-                    {{ change.elo_change > 0 ? '+' : '' }}{{ Math.round(change.elo_change) }}
-                  </span>
-                  <div class="text-xs text-muted-foreground">
-                    {{ Math.round(change.elo_before) }} → {{ Math.round(change.elo_after) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
 
@@ -186,6 +223,18 @@
     <CreateMatchModal 
       v-model:open="showCreateMatchModal"
       @match-created="handleMatchCreated"
+    />
+    
+    <!-- Create Team Modal -->
+    <CreateTeamModal 
+      v-model:open="showCreateTeamModal"
+      @team-created="handleTeamCreated"
+    />
+    
+    <!-- Create Team Match Modal -->
+    <CreateTeamMatchModal 
+      v-model:open="showCreateTeamMatchModal"
+      @team-match-created="handleTeamMatchCreated"
     />
   </div>
 </template>
@@ -196,10 +245,11 @@ import { useRouter } from 'vue-router'
 import { useSEO } from '@/shared/composables/useSEO'
 import { useDateFormatter } from '@/shared/composables/useDateFormatter'
 import { useAuthStore } from '@/features/auth/stores/auth'
-import type { Player, Match, EloHistory } from '@/features/core/types'
+import type { Player, Match } from '@/features/core/types'
+import type { Team } from '@/features/core/types/team'
+import type { TeamMatch } from '@/features/core/services/team-match.service'
 import playerService from '@/features/core/services/player.service'
 import matchService from '@/features/core/services/match.service'
-import eloHistoryService from '@/features/core/services/elo-history.service'
 import statsService, { type Stats } from '@/features/core/services/stats.service'
 import { usePlayer } from '@/features/core/composables/usePlayer'
 import {
@@ -213,11 +263,12 @@ import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import PlayerLink from '@/features/core/components/PlayerLink.vue'
 import CreateMatchModal from '@/features/core/components/CreateMatchModal.vue'
+import CreateTeamModal from '@/features/core/components/CreateTeamModal.vue'
+import CreateTeamMatchModal from '@/features/core/components/CreateTeamMatchModal.vue'
 import {
   UserIcon,
   TrophyIcon,
   CalendarIcon,
-  TrendingUpIcon,
   ClockIcon,
   PlusIcon,
   UsersIcon,
@@ -229,11 +280,22 @@ const authStore = useAuthStore()
 
 // Reactive data
 const topPlayersData = ref<Player[]>([])
+const topTeamsData = ref<Player[]>([])
 const recentMatchesData = ref<Match[]>([])
-const recentEloChangesData = ref<EloHistory[]>([])
-const statsData = ref<Stats>({ total_players: 0, total_matches: 0, matches_last_7_days: 0, matches_previous_7_days: 0 })
+const statsData = ref<Stats>({ 
+  total_players: 0, 
+  total_matches: 0, 
+  matches_last_7_days: 0, 
+  matches_previous_7_days: 0,
+  total_teams: 0,
+  total_team_matches: 0,
+  team_matches_last_7_days: 0,
+  team_matches_previous_7_days: 0
+})
 const isLoading = ref(false)
 const showCreateMatchModal = ref(false)
+const showCreateTeamModal = ref(false)
+const showCreateTeamMatchModal = ref(false)
 
 
 
@@ -242,26 +304,41 @@ const topPlayers = computed(() => {
   return topPlayersData.value.slice(0, 10)
 })
 
+const topTeams = computed(() => {
+  return topTeamsData.value.slice(0, 10)
+})
+
 const recentMatches = computed(() => {
   return recentMatchesData.value.slice(0, 10)
 })
 
-const recentEloChanges = computed(() => {
-  return recentEloChangesData.value.slice(0, 8)
-})
 
 const stats = computed(() => {
   const totalPlayers = statsData.value.total_players
   const totalMatches = statsData.value.total_matches
   const weekMatches = statsData.value.matches_last_7_days
   
-  // Calculer le pourcentage de changement
+  // Calculer le pourcentage de changement pour 1v1
   const weekMatchesChange = statsData.value.matches_previous_7_days > 0 
     ? Math.round(((weekMatches - statsData.value.matches_previous_7_days) / statsData.value.matches_previous_7_days) * 100)
     : 0
   
+  // Statistiques équipes
+  const totalTeams = statsData.value.total_teams
+  const totalTeamMatches = statsData.value.total_team_matches
+  const teamWeekMatches = statsData.value.team_matches_last_7_days
+  
+  // Calculer le pourcentage de changement pour 2v2
+  const teamWeekMatchesChange = statsData.value.team_matches_previous_7_days > 0 
+    ? Math.round(((teamWeekMatches - statsData.value.team_matches_previous_7_days) / statsData.value.team_matches_previous_7_days) * 100)
+    : 0
+  
   const averageElo = topPlayersData.value.length > 0 
     ? topPlayersData.value.reduce((sum, p) => sum + p.elo_rating, 0) / topPlayersData.value.length 
+    : 0
+
+  const averageTeamElo = topTeamsData.value.length > 0 
+    ? topTeamsData.value.reduce((sum, p) => sum + p.team_elo_rating, 0) / topTeamsData.value.length 
     : 0
 
   return {
@@ -269,13 +346,25 @@ const stats = computed(() => {
     totalMatches,
     weekMatches,
     weekMatchesChange,
-    averageElo
+    averageElo,
+    totalTeams,
+    totalTeamMatches,
+    teamWeekMatches,
+    teamWeekMatchesChange,
+    averageTeamElo
   }
 })
 
 // Utility functions
 const { formatRelativeTime } = useDateFormatter()
 const { getWinLossRecord } = usePlayer()
+
+const getTeamWinLossRecord = (player: Player): string => {
+  const totalMatches = player.team_total_matches
+  const wins = player.team_wins
+  const losses = player.team_losses
+  return `${wins}V - ${losses}D (${totalMatches} matchs)`
+}
 
 const getPlayer = (playerId: number): Player | null => {
   return topPlayersData.value.find(p => p.id === playerId) || null
@@ -299,6 +388,15 @@ const loadTopPlayers = async () => {
   }
 }
 
+// Load top teams from API
+const loadTopTeams = async () => {
+  try {
+    topTeamsData.value = await playerService.getTopTeams(10)
+  } catch (error) {
+    console.error('Error loading top teams:', error)
+  }
+}
+
 // Load recent matches from API
 const loadRecentMatches = async () => {
   try {
@@ -308,14 +406,6 @@ const loadRecentMatches = async () => {
   }
 }
 
-// Load recent ELO changes from API
-const loadRecentEloChanges = async () => {
-  try {
-    recentEloChangesData.value = await eloHistoryService.getRecentEloHistory()
-  } catch (error) {
-    console.error('Error loading recent ELO changes:', error)
-  }
-}
 
 // Load stats from API
 const loadStats = async () => {
@@ -329,8 +419,8 @@ const loadStats = async () => {
 // Load data on mount
 onMounted(() => {
   loadTopPlayers()
+  loadTopTeams()
   loadRecentMatches()
-  loadRecentEloChanges()
   loadStats()
 })
 
@@ -359,11 +449,32 @@ const openNewMatchModal = () => {
   showCreateMatchModal.value = true
 }
 
+const openNewTeamModal = () => {
+  showCreateTeamModal.value = true
+}
+
+const openNewTeamMatchModal = () => {
+  showCreateTeamMatchModal.value = true
+}
+
 const handleMatchCreated = (_match: Match) => {
   // Recharger les données après création d'un match
   loadRecentMatches()
-  loadRecentEloChanges()
   loadTopPlayers()
+  loadTopTeams()
+  loadStats()
+}
+
+const handleTeamCreated = (_team: Team) => {
+  // Recharger les données après création d'une équipe
+  loadTopTeams()
+  loadStats()
+}
+
+const handleTeamMatchCreated = (_teamMatch: TeamMatch) => {
+  // Recharger les données après création d'un match d'équipe
+  loadRecentMatches()
+  loadTopTeams()
   loadStats()
 }
 

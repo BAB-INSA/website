@@ -5,6 +5,10 @@ export interface Stats {
     total_matches: number
     matches_last_7_days: number
     matches_previous_7_days: number
+    total_teams: number
+    total_team_matches: number
+    team_matches_last_7_days: number
+    team_matches_previous_7_days: number
 }
 
 class StatsService {

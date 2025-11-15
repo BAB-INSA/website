@@ -1,7 +1,6 @@
-<!-- src/shared/components/PlayerLink.vue -->
 <template>
   <router-link
-    :to="`/player/${props.player.id}/${props.player.slug || props.player.username}`"
+    :to="`/team/${props.team.id}/${props.team.slug}`"
     :class="[
       'text-primary hover:text-primary/80 hover:underline transition-colors cursor-pointer font-medium',
       props.class
@@ -13,10 +12,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Player } from '@/features/core/types/player'
+import type { Team } from '@/features/core/types/team'
 
 interface Props {
-  player: Player
+  team: Team
   showId?: boolean
   class?: string
 }
@@ -27,9 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const displayText = computed(() => {
+  const teamName = props.team.name || `${props.team.player1?.username || 'Joueur 1'} & ${props.team.player2?.username || 'Joueur 2'}`
+  
   if (props.showId) {
-    return `${props.player.username} (#${props.player.id})`
+    return `${teamName} (#${props.team.id})`
   }
-  return props.player.username
+  return teamName
 })
 </script>
