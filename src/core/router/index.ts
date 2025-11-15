@@ -14,9 +14,9 @@ import Profile from '@/features/auth/views/Profile.vue'
 import ForgotPassword from '@/features/auth/views/ForgotPassword.vue'
 import ResetPassword from '@/features/auth/views/ResetPassword.vue'
 import NotFound from '@/views/NotFound.vue'
-import PlayerMain from '@/features/core/views/player/profile/PlayerMain.vue'
 import PlayerList from '@/features/core/views/player/PlayerList.vue'
 import PlayerLeaderboard from '@/features/core/views/PlayerLeaderboard.vue'
+import TeamList from '@/features/core/views/team/TeamList.vue'
 import { adminRoutes } from '@/features/admin/router/admin.routes'
 
 const routes: Array<RouteRecordRaw> = [
@@ -47,6 +47,22 @@ const routes: Array<RouteRecordRaw> = [
                         component: PlayerLeaderboard,
                         meta: {
                             title: 'Classement Top 100'
+                        }
+                    },
+                    {
+                        path: 'teams',
+                        name: 'TeamList',
+                        component: TeamList,
+                        meta: {
+                            title: 'Liste des Équipes'
+                        }
+                    },
+                    {
+                        path: 'team/:id/:slug',
+                        name: 'TeamProfile',
+                        component: () => import('@/features/core/views/team/TeamProfile.vue'),
+                        meta: {
+                            title: 'Profil Équipe'
                         }
                     },
                     {
@@ -148,30 +164,12 @@ const routes: Array<RouteRecordRaw> = [
                         }
                     },
                     {
-                        path: 'player/:id',
-                        component: PlayerMain,
-                        children: [
-                            {
-                                path: '',
-                                redirect: 'profile'
-                            },
-                            {
-                                path: 'profile',
-                                name: 'PlayerProfile',
-                                component: () => import('@/features/core/views/player/profile/PlayerProfile.vue'),
-                                meta: {
-                                    title: 'Player Profile'
-                                }
-                            },
-                            {
-                                path: 'history',
-                                name: 'PlayerHistory',
-                                component: () => import('@/features/core/views/player/profile/PlayerHistory.vue'),
-                                meta: {
-                                    title: 'Match History'
-                                }
-                            }
-                        ]
+                        path: 'player/:id/:slug',
+                        name: 'PlayerProfile',
+                        component: () => import('@/features/core/views/player/profile/PlayerProfile.vue'),
+                        meta: {
+                            title: 'Profil Joueur'
+                        }
                     },
                     {
                         path: 'legal',

@@ -2,6 +2,22 @@
   <div class="space-y-4">
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
+        <Select v-model="selectedTeamId">
+          <SelectTrigger class="w-64">
+            <SelectValue placeholder="Filtrer par équipe..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les équipes</SelectItem>
+            <SelectItem 
+              v-for="team in teams" 
+              :key="team.id" 
+              :value="team.id.toString()"
+            >
+              {{ team.name }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        
         <Select v-model="selectedPlayerId">
           <SelectTrigger class="w-64">
             <SelectValue placeholder="Filtrer par joueur..." />
@@ -17,6 +33,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
+        
         <Select v-model="statusFilter">
           <SelectTrigger class="w-40">
             <SelectValue placeholder="Statut" />
@@ -28,6 +45,7 @@
             <SelectItem value="rejected">Rejeté</SelectItem>
           </SelectContent>
         </Select>
+        
         <Input
           v-model="dateFrom"
           type="date"
@@ -45,7 +63,7 @@
         <Button variant="outline" @click="resetFilters">
           Réinitialiser
         </Button>
-        <Button @click="loadMatches">
+        <Button @click="loadTeamMatches">
           Actualiser
         </Button>
       </div>
@@ -57,7 +75,7 @@
           <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700">
             <tr>
               <th class="px-6 py-3">ID</th>
-              <th class="px-6 py-3">Joueurs</th>
+              <th class="px-6 py-3">Équipes</th>
               <th class="px-6 py-3">ELO Rating</th>
               <th class="px-6 py-3">Statut</th>
               <th class="px-6 py-3">Créé le</th>
@@ -72,80 +90,82 @@
               </td>
             </tr>
             <tr
-              v-else-if="!matches.length"
+              v-else-if="!teamMatches.length"
               class="border-b"
             >
               <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                Aucun match trouvé
+                Aucun match d'équipe trouvé
               </td>
             </tr>
             <tr
               v-else
-              v-for="match in matches"
-              :key="match.id"
+              v-for="teamMatch in teamMatches"
+              :key="teamMatch.id"
               class="border-b hover:bg-gray-50 dark:hover:bg-gray-700"
             >
-              <td class="px-6 py-4 font-medium">#{{ match.id }}</td>
+              <td class="px-6 py-4 font-medium">#{{ teamMatch.id }}</td>
               <td class="px-6 py-4">
-                <div class="space-y-1">
+                <div class="space-y-2">
                   <div class="flex items-center space-x-2">
                     <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
-                      {{ match.player1.username.charAt(0).toUpperCase() }}
+                      T1
                     </div>
-                    <span class="font-medium">{{ match.player1.username }}</span>
-                    <Crown v-if="match.winner?.id === match.player1.id" class="h-4 w-4 text-yellow-500" />
+                    <div>
+                      <div class="font-medium">{{ teamMatch.team1.name }}</div>
+                      <div class="text-xs text-gray-500">
+                        {{ teamMatch.team1.player1.username }} & {{ teamMatch.team1.player2.username }}
+                      </div>
+                    </div>
+                    <Crown v-if="teamMatch.winner_team?.id === teamMatch.team1.id" class="h-4 w-4 text-yellow-500" />
                   </div>
-                  <div class="text-gray-400 text-xs">vs</div>
+                  <div class="text-gray-400 text-xs text-center">vs</div>
                   <div class="flex items-center space-x-2">
                     <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
-                      {{ match.player2.username.charAt(0).toUpperCase() }}
+                      T2
                     </div>
-                    <span class="font-medium">{{ match.player2.username }}</span>
-                    <Crown v-if="match.winner?.id === match.player2.id" class="h-4 w-4 text-yellow-500" />
+                    <div>
+                      <div class="font-medium">{{ teamMatch.team2.name }}</div>
+                      <div class="text-xs text-gray-500">
+                        {{ teamMatch.team2.player1.username }} & {{ teamMatch.team2.player2.username }}
+                      </div>
+                    </div>
+                    <Crown v-if="teamMatch.winner_team?.id === teamMatch.team2.id" class="h-4 w-4 text-yellow-500" />
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4">
                 <div class="font-mono text-lg">
-                  {{ match.player1.elo_rating }} - {{ match.player2.elo_rating }}
+                  {{ Math.round(teamMatch.team1.elo_rating) }} - {{ Math.round(teamMatch.team2.elo_rating) }}
                 </div>
                 <div class="text-xs text-gray-500">ELO Rating</div>
               </td>
               <td class="px-6 py-4">
-                <Badge :variant="getStatusVariant(match.status)">
-                  {{ formatStatus(match.status) }}
+                <Badge :variant="getStatusVariant(teamMatch.status)">
+                  {{ formatStatus(teamMatch.status) }}
                 </Badge>
               </td>
               <td class="px-6 py-4">
-                {{ formatDate(match.created_at) }}
+                {{ formatDate(teamMatch.created_at) }}
               </td>
               <td class="px-6 py-4">
-                {{ match.confirmed_at ? formatDate(match.confirmed_at) : '-' }}
+                {{ teamMatch.confirmed_at ? formatDate(teamMatch.confirmed_at) : '-' }}
               </td>
               <td class="px-6 py-4">
                 <div class="flex space-x-2">
                   <Button
-                    v-if="match.status === 'pending'"
-                    variant="outline"
-                    size="sm"
-                    @click="editMatch(match)"
-                  >
-                    Modifier
-                  </Button>
-                  <Button
-                    v-if="match.status === 'pending'"
+                    v-if="teamMatch.status === 'pending'"
                     variant="secondary"
                     size="sm"
-                    @click="cancelMatch(match)"
+                    @click="cancelTeamMatch(teamMatch)"
                     :disabled="cancelling"
                   >
                     Annuler
                   </Button>
                   <Button
-                    v-if="match.status === 'confirmed' && canDeleteMatch(match)"
+                    v-if="teamMatch.status === 'confirmed' && canDeleteTeamMatch(teamMatch)"
                     variant="destructive"
                     size="sm"
-                    @click="confirmDeleteMatch(match)"
+                    @click="confirmDeleteTeamMatch(teamMatch)"
                   >
                     Supprimer
                   </Button>
@@ -161,7 +181,7 @@
       <Pagination
         v-slot="{ page }"
         :items-per-page="pageSize"
-        :total="totalMatches"
+        :total="totalTeamMatches"
         :default-page="currentPage"
         @update:page="goToPage"
       >
@@ -182,20 +202,12 @@
       </Pagination>
     </div>
 
-    <MatchEditModal
-      v-if="selectedMatch"
-      :match="selectedMatch"
-      :show="showEditModal"
-      @close="closeEditModal"
-      @saved="onMatchSaved"
-    />
-
     <Dialog :open="showDeleteConfirm" @update:open="showDeleteConfirm = $event">
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Confirmer la suppression</DialogTitle>
           <DialogDescription>
-            Êtes-vous sûr de vouloir supprimer le match #{{ matchToDelete?.id }} ?
+            Êtes-vous sûr de vouloir supprimer le match d'équipe #{{ teamMatchToDelete?.id }} ?
             Cette action est irréversible.
           </DialogDescription>
         </DialogHeader>
@@ -203,7 +215,7 @@
           <Button variant="outline" @click="showDeleteConfirm = false">
             Annuler
           </Button>
-          <Button variant="destructive" @click="deleteMatch" :disabled="deleting">
+          <Button variant="destructive" @click="deleteTeamMatch" :disabled="deleting">
             {{ deleting ? 'Suppression...' : 'Supprimer' }}
           </Button>
         </DialogFooter>
@@ -216,11 +228,13 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { Crown } from 'lucide-vue-next'
 import { useAdmin } from '@/features/admin/composables/useAdmin'
-import adminMatchesService from '@/features/admin/services/admin-matches.service'
+import adminTeamMatchesService from '@/features/admin/services/admin-team-matches.service'
 import PlayerService from '@/features/core/services/player.service'
+import TeamService from '@/features/core/services/team.service'
 import toastService from '@/shared/services/toast.service'
-import type { Match, MatchFilters } from '@/features/admin/types/match'
+import type { TeamMatch, TeamMatchFilters } from '@/features/admin/types/team-match'
 import type { Player } from '@/features/core/types/player'
+import type { Team } from '@/features/core/types/team'
 
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
@@ -236,46 +250,46 @@ import {
   PaginationPrevious,
 } from '@/shared/components/ui/pagination'
 import Spinner from '@/shared/components/ui/Spinner.vue'
-import MatchEditModal from './MatchEditModal.vue'
 
 const { } = useAdmin()
 
-const matches = ref<Match[]>([])
+const teamMatches = ref<TeamMatch[]>([])
 const players = ref<Player[]>([])
+const teams = ref<Team[]>([])
 const loading = ref(false)
 const deleting = ref(false)
 const cancelling = ref(false)
+const selectedTeamId = ref('all')
 const selectedPlayerId = ref('all')
 const statusFilter = ref('all')
 const dateFrom = ref('')
 const dateTo = ref('')
 const currentPage = ref(1)
 const totalPages = ref(1)
-const totalMatches = ref(0)
+const totalTeamMatches = ref(0)
 const pageSize = 10
 
-const selectedMatch = ref<Match | null>(null)
-const showEditModal = ref(false)
-const matchToDelete = ref<Match | null>(null)
+const teamMatchToDelete = ref<TeamMatch | null>(null)
 const showDeleteConfirm = ref(false)
 
-const filters = computed<MatchFilters>(() => ({
+const filters = computed<TeamMatchFilters>(() => ({
+  team_id: selectedTeamId.value === 'all' ? undefined : selectedTeamId.value,
   player_id: selectedPlayerId.value === 'all' ? undefined : selectedPlayerId.value,
   status: statusFilter.value === 'all' ? undefined : statusFilter.value as 'pending' | 'confirmed' | 'rejected' | 'cancelled',
   date_from: dateFrom.value || undefined,
   date_to: dateTo.value || undefined
 }))
 
-const loadMatches = async () => {
+const loadTeamMatches = async () => {
   loading.value = true
   try {
-    const response = await adminMatchesService.getMatches(filters.value, currentPage.value, pageSize)
-    matches.value = response.data
+    const response = await adminTeamMatchesService.getTeamMatches(filters.value, currentPage.value, pageSize)
+    teamMatches.value = response.data
     totalPages.value = response.totalPages
-    totalMatches.value = response.total
+    totalTeamMatches.value = response.total
   } catch (error) {
-    toastService.error('Erreur', 'Impossible de charger les matchs')
-    console.error('Failed to load matches:', error)
+    toastService.error('Erreur', 'Impossible de charger les matchs d\'équipes')
+    console.error('Failed to load team matches:', error)
   } finally {
     loading.value = false
   }
@@ -291,75 +305,71 @@ const loadPlayers = async () => {
   }
 }
 
-const editMatch = (match: Match) => {
-  selectedMatch.value = match
-  showEditModal.value = true
+const loadTeams = async () => {
+  try {
+    const response = await TeamService.getTeams({ page: 1, pageSize: 100 })
+    teams.value = response.data
+  } catch (error) {
+    toastService.error('Erreur', 'Impossible de charger les équipes')
+    console.error('Failed to load teams:', error)
+  }
 }
 
-const closeEditModal = () => {
-  selectedMatch.value = null
-  showEditModal.value = false
-}
-
-const onMatchSaved = () => {
-  closeEditModal()
-  loadMatches()
-}
-
-const cancelMatch = async (match: Match) => {
+const cancelTeamMatch = async (teamMatch: TeamMatch) => {
   cancelling.value = true
   try {
-    await adminMatchesService.cancelMatch(match.id)
-    toastService.success('Succès', 'Match annulé avec succès')
-    loadMatches()
+    await adminTeamMatchesService.cancelTeamMatch(teamMatch.id)
+    toastService.success('Succès', 'Match d\'équipe annulé avec succès')
+    loadTeamMatches()
   } catch (error) {
-    toastService.error('Erreur', 'Impossible d\'annuler le match')
-    console.error('Failed to cancel match:', error)
+    toastService.error('Erreur', 'Impossible d\'annuler le match d\'équipe')
+    console.error('Failed to cancel team match:', error)
   } finally {
     cancelling.value = false
   }
 }
 
-const confirmDeleteMatch = (match: Match) => {
-  matchToDelete.value = match
+const confirmDeleteTeamMatch = (teamMatch: TeamMatch) => {
+  teamMatchToDelete.value = teamMatch
   showDeleteConfirm.value = true
 }
 
-const deleteMatch = async () => {
-  if (!matchToDelete.value) return
+const deleteTeamMatch = async () => {
+  if (!teamMatchToDelete.value) return
   
   deleting.value = true
   try {
-    await adminMatchesService.deleteMatch(matchToDelete.value.id)
-    toastService.success('Succès', 'Match supprimé avec succès')
+    await adminTeamMatchesService.deleteTeamMatch(teamMatchToDelete.value.id)
+    toastService.success('Succès', 'Match d\'équipe supprimé avec succès')
     showDeleteConfirm.value = false
-    matchToDelete.value = null
-    loadMatches()
+    teamMatchToDelete.value = null
+    loadTeamMatches()
   } catch (error) {
-    toastService.error('Erreur', 'Impossible de supprimer le match')
-    console.error('Failed to delete match:', error)
+    toastService.error('Erreur', 'Impossible de supprimer le match d\'équipe')
+    console.error('Failed to delete team match:', error)
   } finally {
     deleting.value = false
   }
 }
 
 const resetFilters = () => {
+  selectedTeamId.value = 'all'
   selectedPlayerId.value = 'all'
   statusFilter.value = 'all'
   dateFrom.value = ''
   dateTo.value = ''
   currentPage.value = 1
-  loadMatches()
+  loadTeamMatches()
 }
 
 const goToPage = (page: number) => {
   if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
     currentPage.value = page
-    loadMatches()
+    loadTeamMatches()
   }
 }
 
-const getStatusVariant = (status: Match['status']) => {
+const getStatusVariant = (status: TeamMatch['status']) => {
   switch (status) {
     case 'confirmed':
       return 'default'
@@ -374,7 +384,7 @@ const getStatusVariant = (status: Match['status']) => {
   }
 }
 
-const formatStatus = (status: Match['status']) => {
+const formatStatus = (status: TeamMatch['status']) => {
   const statusMap = {
     pending: 'En attente',
     confirmed: 'Confirmé',
@@ -384,10 +394,10 @@ const formatStatus = (status: Match['status']) => {
   return statusMap[status] || status
 }
 
-const canDeleteMatch = (match: Match) => {
+const canDeleteTeamMatch = (teamMatch: TeamMatch) => {
   const oneWeekAgo = new Date()
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-  const matchCreatedAt = new Date(match.created_at)
+  const matchCreatedAt = new Date(teamMatch.created_at)
   return matchCreatedAt >= oneWeekAgo
 }
 
@@ -401,13 +411,14 @@ const formatDate = (dateString: string) => {
   })
 }
 
-watch([selectedPlayerId, statusFilter, dateFrom, dateTo], () => {
+watch([selectedTeamId, selectedPlayerId, statusFilter, dateFrom, dateTo], () => {
   currentPage.value = 1
-  loadMatches()
+  loadTeamMatches()
 })
 
 onMounted(() => {
   loadPlayers()
-  loadMatches()
+  loadTeams()
+  loadTeamMatches()
 })
 </script>

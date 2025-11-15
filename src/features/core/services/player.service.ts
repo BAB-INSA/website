@@ -2,6 +2,7 @@ import apiClient from '@/core/lib/axios.ts'
 import type { Player, EloChartEntry } from '@/features/core/types/player.ts'
 import type { EloHistory } from '@/features/core/types/elo-history.ts'
 import type { Match } from '@/features/core/types/match.ts'
+import type { Team } from '@/features/core/types/team.ts'
 import type { PaginatedResponse, PaginationParams } from '@/shared/types/pagination.ts'
 
 class PlayerService {
@@ -44,9 +45,10 @@ class PlayerService {
         return response.data
     }
 
-    async getPlayerEloHistory(id: number, limit?: number): Promise<EloChartEntry[]> {
+    async getPlayerEloHistory(id: number, limit?: number, matchType?: 'solo' | 'team'): Promise<EloChartEntry[]> {
         const queryParams = new URLSearchParams()
         if (limit) queryParams.append('limit', limit.toString())
+        if (matchType) queryParams.append('match_type', matchType)
         
         const queryString = queryParams.toString()
         const url = `/players/${id}/elo-history${queryString ? `?${queryString}` : ''}`
@@ -58,8 +60,18 @@ class PlayerService {
             date: entry.created_at,
             elo: entry.elo_after,
             eloChange: entry.elo_change,
-            matchType: 'ranked'
+            matchType: matchType || 'ranked'
         }))
+    }
+
+    async getTopTeams(limit: number = 10): Promise<Player[]> {
+        const response = await apiClient.get(`/players/top-teams?limit=${limit}`)
+        return response.data
+    }
+
+    async getPlayerTeams(id: number): Promise<Team[]> {
+        const response = await apiClient.get(`/players/${id}/teams`)
+        return response.data
     }
 }
 

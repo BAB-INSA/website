@@ -12,8 +12,12 @@ class EloHistoryService {
         return response.data
     }
 
-    async getPlayerEloHistory(playerId: number): Promise<EloHistory[]> {
-        const response = await apiClient.get(`/elo-history/player/${playerId}`)
+    async getPlayerEloHistory(playerId: number, matchType?: 'solo' | 'team'): Promise<EloHistory[]> {
+        let url = `/elo-history/player/${playerId}`
+        if (matchType) {
+            url += `?match_type=${matchType}`
+        }
+        const response = await apiClient.get(url)
         return response.data
     }
 

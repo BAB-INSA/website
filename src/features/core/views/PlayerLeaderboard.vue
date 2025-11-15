@@ -2,13 +2,45 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col space-y-4">
       <h1 class="text-3xl font-bold tracking-tight flex items-center gap-2">
         <Trophy class="h-8 w-8 text-yellow-500" />
         Classement
       </h1>
+      
+      <!-- Tabs -->
+      <div class="flex bg-muted rounded-lg p-1 w-fit">
+        <button
+          @click="selectedLeaderboardType = 'solo'"
+          :class="[
+            'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+            selectedLeaderboardType === 'solo' 
+              ? 'bg-background text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:text-foreground'
+          ]"
+        >
+          <Trophy class="w-4 h-4 mr-2 inline" />
+          Classement 1v1
+        </button>
+        <button
+          @click="selectedLeaderboardType = 'team'"
+          :class="[
+            'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+            selectedLeaderboardType === 'team' 
+              ? 'bg-background text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:text-foreground'
+          ]"
+        >
+          <Users class="w-4 h-4 mr-2 inline" />
+          Classement 2v2
+        </button>
+      </div>
+      
       <p class="text-muted-foreground">
-        Les 100 meilleurs joueurs classés par rating ELO
+        {{ selectedLeaderboardType === 'solo' 
+          ? 'Les 100 meilleurs joueurs en 1v1 classés par rating ELO' 
+          : 'Les 100 meilleurs joueurs en 2v2 classés par rating ELO'
+        }}
       </p>
     </div>
 
@@ -52,7 +84,7 @@
                   :class="getRankColor(index)"
                 />
                 <span class="font-bold text-lg" :class="getRankColor(index)">
-                  #{{ player.rank ?? (index + 1) }}
+                  #{{ selectedLeaderboardType === 'solo' ? (player.rank ?? (index + 1)) : (player.team_rank ?? (index + 1)) }}
                 </span>
               </div>
             </td>
@@ -60,19 +92,21 @@
               <PlayerLink :player="player" class="font-medium text-primary hover:text-primary/80" />
             </td>
             <td class="px-4 py-3">
-              <span class="font-bold text-lg">{{ player.elo_rating }}</span>
+              <span class="font-bold text-lg">
+                {{ selectedLeaderboardType === 'solo' ? Math.round(player.elo_rating) : Math.round(player.team_elo_rating) }}
+              </span>
             </td>
             <td class="px-4 py-3 text-green-600 dark:text-green-400 font-medium">
-              {{ player.wins }}
+              {{ selectedLeaderboardType === 'solo' ? player.wins : player.team_wins }}
             </td>
             <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">
-              {{ getLosses(player) }}
+              {{ selectedLeaderboardType === 'solo' ? getLosses(player) : player.team_losses }}
             </td>
             <td class="px-4 py-3 font-medium">
-              {{ getWinRate(player) }}%
+              {{ selectedLeaderboardType === 'solo' ? getWinRate(player) : getTeamWinRate(player) }}%
             </td>
             <td class="px-4 py-3 text-muted-foreground">
-              {{ player.total_matches }}
+              {{ selectedLeaderboardType === 'solo' ? player.total_matches : player.team_total_matches }}
             </td>
           </tr>
         </tbody>
@@ -94,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { Trophy, Medal, Award, Users } from 'lucide-vue-next'
 import PlayerService from '@/features/core/services/player.service'
 import PlayerLink from '@/features/core/components/PlayerLink.vue'
@@ -103,8 +137,14 @@ import type { Player } from '@/features/core/types/player'
 
 const players = ref<Player[]>([])
 const isLoading = ref(true)
+const selectedLeaderboardType = ref<'solo' | 'team'>('team')
 
 const { getWinRate, getLosses } = usePlayer()
+
+const getTeamWinRate = (player: Player): number => {
+  if (player.team_total_matches === 0) return 0
+  return Math.round((player.team_wins / player.team_total_matches) * 100)
+}
 
 const getRankIcon = (index: number) => {
   switch (index) {
@@ -127,13 +167,21 @@ const getRankColor = (index: number) => {
 const loadLeaderboard = async () => {
   try {
     isLoading.value = true
-    players.value = await PlayerService.getTopPlayers()
+    if (selectedLeaderboardType.value === 'solo') {
+      players.value = await PlayerService.getTopPlayers(100)
+    } else {
+      players.value = await PlayerService.getTopTeams(100)
+    }
   } catch (error) {
     console.error('Error fetching leaderboard:', error)
   } finally {
     isLoading.value = false
   }
 }
+
+watch(selectedLeaderboardType, () => {
+  loadLeaderboard()
+})
 
 onMounted(() => {
   loadLeaderboard()

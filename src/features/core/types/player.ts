@@ -4,6 +4,7 @@
 export interface Player {
     id: number
     username: string
+    slug: string
     elo_rating: number
     total_matches: number
     wins: number
@@ -13,6 +14,11 @@ export interface Player {
     created_at: string
     updated_at: string
     rank?: number
+    team_elo_rating: number
+    team_rank: number
+    team_total_matches: number
+    team_wins: number
+    team_losses: number
 }
 
 /**
