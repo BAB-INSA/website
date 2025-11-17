@@ -58,6 +58,22 @@ const routes: Array<RouteRecordRaw> = [
                         }
                     },
                     {
+                        path: 'matches',
+                        name: 'MatchesHistory',
+                        component: () => import('@/views/MatchesHistory.vue'),
+                        meta: {
+                            title: 'Historique des Matchs'
+                        }
+                    },
+                    {
+                        path: 'team-matches',
+                        name: 'TeamMatchesHistory',
+                        component: () => import('@/views/TeamMatchesHistory.vue'),
+                        meta: {
+                            title: 'Historique des Matchs 2v2'
+                        }
+                    },
+                    {
                         path: 'team/:id/:slug',
                         name: 'TeamProfile',
                         component: () => import('@/features/core/views/team/TeamProfile.vue'),
