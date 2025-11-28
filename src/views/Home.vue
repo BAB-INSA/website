@@ -193,11 +193,9 @@
                    class="flex items-center justify-between p-4 rounded-lg border">
                 <div class="flex items-center gap-4">
                   <div class="text-center">
-                    <PlayerLink v-if="getPlayer(match.player1_id)" :player="getPlayer(match.player1_id)!" />
-                    <span v-else class="font-medium">{{ getPlayerName(match.player1_id) }}</span>
+                    <PlayerLink :player="match.player1" />
                     <p class="text-sm text-muted-foreground">vs</p>
-                    <PlayerLink v-if="getPlayer(match.player2_id)" :player="getPlayer(match.player2_id)!" />
-                    <span v-else class="font-medium">{{ getPlayerName(match.player2_id) }}</span>
+                    <PlayerLink :player="match.player2" />
                   </div>
                   <div class="text-center">
                     <Badge :variant="match.status === 'confirmed' ? 'default' : 'secondary'">
@@ -206,8 +204,7 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <PlayerLink v-if="getPlayer(match.winner_id)" :player="getPlayer(match.winner_id)!" class="font-bold text-green-600" />
-                  <span v-else class="font-bold text-green-600">{{ getPlayerName(match.winner_id) }}</span>
+                  <PlayerLink :player="match.winner" class="font-bold text-green-600" />
                   <p class="text-sm text-muted-foreground">{{ formatMatchDate(match.created_at) }}</p>
                 </div>
               </div>
@@ -366,14 +363,6 @@ const getTeamWinLossRecord = (player: Player): string => {
   return `${wins}V - ${losses}D (${totalMatches} matchs)`
 }
 
-const getPlayer = (playerId: number): Player | null => {
-  return topPlayersData.value.find(p => p.id === playerId) || null
-}
-
-const getPlayerName = (playerId: number): string => {
-  const player = getPlayer(playerId)
-  return player?.username || `Joueur ${playerId}`
-}
 
 // Load top players from API
 const loadTopPlayers = async () => {
