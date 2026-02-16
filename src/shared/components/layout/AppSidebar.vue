@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Home, Users, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale, Settings, Trophy, History, Users2 } from "lucide-vue-next"
+import { Home, Users, HelpCircle, Shield, Eye, FileText, Mail, Heart, Scale, Settings, Trophy, History, Users2, Swords } from "lucide-vue-next"
 import {
     Sidebar,
     SidebarContent,
@@ -86,6 +86,15 @@ watch(() => router.currentRoute.value.path, () => {
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'TournamentList'}">
+                  <Swords />
+                  <span>Tournois</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -116,6 +125,14 @@ watch(() => router.currentRoute.value.path, () => {
                 <RouterLink :to="{name: 'AdminTeamMatches'}">
                   <Users />
                   <span>Gestion des matchs 2v2</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <RouterLink :to="{name: 'AdminTournaments'}">
+                  <Swords />
+                  <span>Gestion des tournois</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

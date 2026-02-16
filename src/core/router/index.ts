@@ -82,6 +82,22 @@ const routes: Array<RouteRecordRaw> = [
                         }
                     },
                     {
+                        path: 'tournaments',
+                        name: 'TournamentList',
+                        component: () => import('@/features/core/views/tournament/TournamentList.vue'),
+                        meta: {
+                            title: 'Tournois'
+                        }
+                    },
+                    {
+                        path: 'tournament/:id/:slug',
+                        name: 'TournamentDetail',
+                        component: () => import('@/features/core/views/tournament/TournamentDetail.vue'),
+                        meta: {
+                            title: 'Tournoi'
+                        }
+                    },
+                    {
                         path: 'pwa-settings',
                         name: 'PwaSettings',
                         component: () => import(/* webpackChunkName: "pwa" */ '@/views/PWASettings.vue'),

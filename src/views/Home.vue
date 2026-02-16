@@ -172,6 +172,10 @@
               <UsersIcon class="mr-2 h-4 w-4" />
               Créer une Équipe
             </Button>
+            <Button v-if="authStore.isAuthenticated" @click="openJoinTournamentModal" class="w-full justify-start" variant="outline">
+              <TrophyIcon class="mr-2 h-4 w-4" />
+              Rejoindre un Tournoi Équipe
+            </Button>
             <Button @click="viewAllPlayers" class="w-full justify-start" variant="outline">
               <UserIcon class="mr-2 h-4 w-4" />
               Voir Tous les Joueurs
@@ -229,9 +233,15 @@
     />
     
     <!-- Create Team Match Modal -->
-    <CreateTeamMatchModal 
+    <CreateTeamMatchModal
       v-model:open="showCreateTeamMatchModal"
       @team-match-created="handleTeamMatchCreated"
+    />
+
+    <!-- Join Tournament Modal -->
+    <JoinTeamTournamentModal
+      v-model:open="showJoinTournamentModal"
+      @joined="handleTournamentJoined"
     />
   </div>
 </template>
@@ -262,6 +272,7 @@ import PlayerLink from '@/features/core/components/PlayerLink.vue'
 import CreateMatchModal from '@/features/core/components/CreateMatchModal.vue'
 import CreateTeamModal from '@/features/core/components/CreateTeamModal.vue'
 import CreateTeamMatchModal from '@/features/core/components/CreateTeamMatchModal.vue'
+import JoinTeamTournamentModal from '@/features/core/components/JoinTeamTournamentModal.vue'
 import {
   UserIcon,
   TrophyIcon,
@@ -293,8 +304,7 @@ const isLoading = ref(false)
 const showCreateMatchModal = ref(false)
 const showCreateTeamModal = ref(false)
 const showCreateTeamMatchModal = ref(false)
-
-
+const showJoinTournamentModal = ref(false)
 
 // Computed values
 const topPlayers = computed(() => {
@@ -467,6 +477,13 @@ const handleTeamMatchCreated = (_teamMatch: TeamMatch) => {
   loadStats()
 }
 
+const openJoinTournamentModal = () => {
+  showJoinTournamentModal.value = true
+}
+
+const handleTournamentJoined = () => {
+  loadStats()
+}
 
 const viewAllPlayers = () => {
   router.push({ name: 'PlayerList' })
