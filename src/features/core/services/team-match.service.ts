@@ -5,6 +5,7 @@ export interface TeamMatchCreateData {
   team1_id: number
   team2_id: number
   winner_team_id: number
+  tournament_id?: number
 }
 
 export interface TeamMatchFilters {

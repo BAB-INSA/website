@@ -8,72 +8,92 @@
         <!-- Filters -->
         <Card>
             <CardContent class="pt-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 flex-wrap">
                         <Select v-model="selectedTeamId">
                             <SelectTrigger class="w-64">
                                 <SelectValue placeholder="Filtrer par équipe..." />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Toutes les équipes</SelectItem>
-                                <SelectItem 
-                                    v-for="team in teams" 
-                                    :key="team.id" 
+                                <SelectItem
+                                    v-for="team in teams"
+                                    :key="team.id"
                                     :value="team.id.toString()"
                                 >
                                     {{ team.name }}
                                 </SelectItem>
                             </SelectContent>
                         </Select>
-                        
+
                         <Select v-model="selectedPlayerId">
                             <SelectTrigger class="w-64">
                                 <SelectValue placeholder="Filtrer par joueur..." />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Tous les joueurs</SelectItem>
-                                <SelectItem 
-                                    v-for="player in players" 
-                                    :key="player.id" 
+                                <SelectItem
+                                    v-for="player in players"
+                                    :key="player.id"
                                     :value="player.id.toString()"
                                 >
                                     {{ player.username }}
                                 </SelectItem>
                             </SelectContent>
                         </Select>
-                        
-                        <Select v-model="statusFilter">
-                            <SelectTrigger class="w-40">
-                                <SelectValue placeholder="Statut" />
+
+                        <Select v-model="selectedTournamentId">
+                            <SelectTrigger class="w-64">
+                                <SelectValue placeholder="Filtrer par tournoi..." />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Tous</SelectItem>
-                                <SelectItem value="pending">En attente</SelectItem>
-                                <SelectItem value="confirmed">Confirmé</SelectItem>
-                                <SelectItem value="rejected">Rejeté</SelectItem>
+                                <SelectItem value="all">Tous les tournois</SelectItem>
+                                <SelectItem
+                                    v-for="tournament in tournaments"
+                                    :key="tournament.id"
+                                    :value="tournament.id.toString()"
+                                >
+                                    {{ tournament.name }}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
-                        
-                        <Input
-                            v-model="dateFrom"
-                            type="date"
-                            placeholder="Date de début"
-                            class="w-40"
-                        />
-                        <Input
-                            v-model="dateTo"
-                            type="date"
-                            placeholder="Date de fin"
-                            class="w-40"
-                        />
                     </div>
-                    <div class="flex space-x-2">
-                        <Button variant="outline" @click="resetFilters">
-                            Réinitialiser
-                        </Button>
-                        <Button @click="loadTeamMatches">
-                            Actualiser
-                        </Button>
+
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <Select v-model="statusFilter">
+                                <SelectTrigger class="w-40">
+                                    <SelectValue placeholder="Statut" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">Tous</SelectItem>
+                                    <SelectItem value="pending">En attente</SelectItem>
+                                    <SelectItem value="confirmed">Confirmé</SelectItem>
+                                    <SelectItem value="rejected">Rejeté</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            <Input
+                                v-model="dateFrom"
+                                type="date"
+                                placeholder="Date de début"
+                                class="w-40"
+                            />
+                            <Input
+                                v-model="dateTo"
+                                type="date"
+                                placeholder="Date de fin"
+                                class="w-40"
+                            />
+                        </div>
+                        <div class="flex gap-2">
+                            <Button variant="outline" @click="resetFilters">
+                                Réinitialiser
+                            </Button>
+                            <Button @click="loadTeamMatches">
+                                Actualiser
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </CardContent>
@@ -93,71 +113,50 @@
                 </p>
             </CardHeader>
             <CardContent>
-                <div class="space-y-4">
-                    <div
-                        v-for="teamMatch in teamMatches"
-                        :key="teamMatch.id"
-                        class="flex items-center justify-between p-6 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                        <div class="flex items-center gap-6">
-                            <div class="text-sm text-muted-foreground font-medium">
-                                #{{ teamMatch.id }}
-                            </div>
-                            <div class="flex flex-col space-y-3">
-                                <!-- Team 1 -->
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                                        T1
-                                    </div>
-                                    <div>
-                                        <div class="font-medium">{{ teamMatch.team1.name }}</div>
-                                        <div class="text-sm text-muted-foreground">
-                                            {{ teamMatch.team1.player1.username }} & {{ teamMatch.team1.player2.username }}
-                                        </div>
-                                    </div>
-                                    <div v-if="teamMatch.winner_team?.id === teamMatch.team1.id" class="text-yellow-500">
-                                        👑
-                                    </div>
-                                </div>
-                                
-                                <div class="text-center text-muted-foreground text-sm font-medium">
-                                    VS
-                                </div>
-                                
-                                <!-- Team 2 -->
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                                        T2
-                                    </div>
-                                    <div>
-                                        <div class="font-medium">{{ teamMatch.team2.name }}</div>
-                                        <div class="text-sm text-muted-foreground">
-                                            {{ teamMatch.team2.player1.username }} & {{ teamMatch.team2.player2.username }}
-                                        </div>
-                                    </div>
-                                    <div v-if="teamMatch.winner_team?.id === teamMatch.team2.id" class="text-yellow-500">
-                                        👑
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center gap-6">
-                            <div class="text-right">
-                                <div class="text-sm text-muted-foreground">Créé le</div>
-                                <div class="font-medium">{{ formatDate(teamMatch.created_at) }}</div>
-                                <div v-if="teamMatch.confirmed_at" class="text-xs text-muted-foreground">
-                                    Confirmé: {{ formatDate(teamMatch.confirmed_at) }}
-                                </div>
-                            </div>
-                            <Badge
-                                :variant="getStatusVariant(teamMatch.status)"
-                                class="capitalize"
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4 font-medium text-muted-foreground">Équipe 1</th>
+                                <th class="text-center py-3 px-4 font-medium text-muted-foreground"></th>
+                                <th class="text-right py-3 px-4 font-medium text-muted-foreground">Équipe 2</th>
+                                <th class="text-center py-3 px-4 font-medium text-muted-foreground">Statut</th>
+                                <th class="text-right py-3 px-4 font-medium text-muted-foreground">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="teamMatch in teamMatches"
+                                :key="teamMatch.id"
+                                class="border-b last:border-0 hover:bg-muted/50 transition-colors"
                             >
-                                {{ getStatusLabel(teamMatch.status) }}
-                            </Badge>
-                        </div>
-                    </div>
+                                <td class="py-3 px-4">
+                                    <span :class="{'font-bold text-green-600': teamMatch.winner_team?.id === teamMatch.team1.id}">
+                                        <TeamLink :team="teamMatch.team1" />
+                                    </span>
+                                    <span v-if="teamMatch.winner_team?.id === teamMatch.team1.id" class="ml-1">👑</span>
+                                </td>
+                                <td class="py-3 px-4 text-center text-muted-foreground text-sm">VS</td>
+                                <td class="py-3 px-4 text-right">
+                                    <span v-if="teamMatch.winner_team?.id === teamMatch.team2.id" class="mr-1">👑</span>
+                                    <span :class="{'font-bold text-green-600': teamMatch.winner_team?.id === teamMatch.team2.id}">
+                                        <TeamLink :team="teamMatch.team2" />
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-center">
+                                    <Badge
+                                        :variant="getStatusVariant(teamMatch.status)"
+                                        class="capitalize"
+                                    >
+                                        {{ getStatusLabel(teamMatch.status) }}
+                                    </Badge>
+                                </td>
+                                <td class="py-3 px-4 text-right text-sm text-muted-foreground">
+                                    {{ formatDate(teamMatch.created_at) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </CardContent>
         </Card>
@@ -215,12 +214,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/shared/components/ui/pagination'
+import TeamLink from '@/features/core/components/TeamLink.vue'
 import teamMatchService from '@/features/core/services/team-match.service'
 import teamService from '@/features/core/services/team.service'
 import playerService from '@/features/core/services/player.service'
+import tournamentService from '@/features/core/services/tournament.service'
 import type { TeamMatch } from '@/features/admin/types/team-match'
 import type { Team } from '@/features/core/types/team'
 import type { Player } from '@/features/core/types/player'
+import type { Tournament } from '@/features/admin/types/tournament'
 
 const getStatusLabel = (status: string) => {
     switch (status) {
@@ -240,9 +242,11 @@ const getStatusLabel = (status: string) => {
 const teamMatches = ref<TeamMatch[]>([])
 const teams = ref<Team[]>([])
 const players = ref<Player[]>([])
+const tournaments = ref<Tournament[]>([])
 const loading = ref(false)
 const selectedTeamId = ref('all')
 const selectedPlayerId = ref('all')
+const selectedTournamentId = ref('all')
 const statusFilter = ref('all')
 const dateFrom = ref('')
 const dateTo = ref('')
@@ -254,6 +258,7 @@ const pageSize = 10
 const filters = computed(() => ({
   team_id: selectedTeamId.value === 'all' ? undefined : parseInt(selectedTeamId.value),
   player_id: selectedPlayerId.value === 'all' ? undefined : parseInt(selectedPlayerId.value),
+  tournament_id: selectedTournamentId.value === 'all' ? undefined : parseInt(selectedTournamentId.value),
   status: statusFilter.value === 'all' ? undefined : statusFilter.value as 'pending' | 'confirmed' | 'rejected' | 'cancelled',
   date_from: dateFrom.value || undefined,
   date_to: dateTo.value || undefined
@@ -291,9 +296,19 @@ const loadPlayers = async () => {
   }
 }
 
+const loadTournaments = async () => {
+  try {
+    const response = await tournamentService.getTournaments({ type: 'team' }, 1, 100)
+    tournaments.value = response.data
+  } catch (error) {
+    console.error('Error loading tournaments:', error)
+  }
+}
+
 const resetFilters = () => {
   selectedTeamId.value = 'all'
   selectedPlayerId.value = 'all'
+  selectedTournamentId.value = 'all'
   statusFilter.value = 'all'
   dateFrom.value = ''
   dateTo.value = ''
@@ -335,6 +350,7 @@ watch(filters, () => {
 onMounted(() => {
     loadTeams()
     loadPlayers()
+    loadTournaments()
     loadTeamMatches()
 })
 </script>

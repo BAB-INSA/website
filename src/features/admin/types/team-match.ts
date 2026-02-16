@@ -48,6 +48,7 @@ export interface TeamMatch {
 export interface TeamMatchFilters {
     team_id?: string
     player_id?: string
+    tournament_id?: string
     status?: 'pending' | 'confirmed' | 'rejected' | 'cancelled'
     date_from?: string
     date_to?: string

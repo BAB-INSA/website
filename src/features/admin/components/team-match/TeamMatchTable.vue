@@ -1,71 +1,91 @@
 <template>
   <div class="space-y-4">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-4">
+    <div class="space-y-4">
+      <div class="flex items-center gap-4 flex-wrap">
         <Select v-model="selectedTeamId">
           <SelectTrigger class="w-64">
             <SelectValue placeholder="Filtrer par équipe..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toutes les équipes</SelectItem>
-            <SelectItem 
-              v-for="team in teams" 
-              :key="team.id" 
+            <SelectItem
+              v-for="team in teams"
+              :key="team.id"
               :value="team.id.toString()"
             >
               {{ team.name }}
             </SelectItem>
           </SelectContent>
         </Select>
-        
+
         <Select v-model="selectedPlayerId">
           <SelectTrigger class="w-64">
             <SelectValue placeholder="Filtrer par joueur..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tous les joueurs</SelectItem>
-            <SelectItem 
-              v-for="player in players" 
-              :key="player.id" 
+            <SelectItem
+              v-for="player in players"
+              :key="player.id"
               :value="player.id.toString()"
             >
               {{ player.username }}
             </SelectItem>
           </SelectContent>
         </Select>
-        
-        <Select v-model="statusFilter">
-          <SelectTrigger class="w-40">
-            <SelectValue placeholder="Statut" />
+
+        <Select v-model="selectedTournamentId">
+          <SelectTrigger class="w-64">
+            <SelectValue placeholder="Filtrer par tournoi..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous</SelectItem>
-            <SelectItem value="pending">En attente</SelectItem>
-            <SelectItem value="confirmed">Confirmé</SelectItem>
-            <SelectItem value="rejected">Rejeté</SelectItem>
+            <SelectItem value="all">Tous les tournois</SelectItem>
+            <SelectItem
+              v-for="tournament in tournaments"
+              :key="tournament.id"
+              :value="tournament.id.toString()"
+            >
+              {{ tournament.name }}
+            </SelectItem>
           </SelectContent>
         </Select>
-        
-        <Input
-          v-model="dateFrom"
-          type="date"
-          placeholder="Date de début"
-          class="w-40"
-        />
-        <Input
-          v-model="dateTo"
-          type="date"
-          placeholder="Date de fin"
-          class="w-40"
-        />
       </div>
-      <div class="flex space-x-2">
-        <Button variant="outline" @click="resetFilters">
-          Réinitialiser
-        </Button>
-        <Button @click="loadTeamMatches">
-          Actualiser
-        </Button>
+
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <Select v-model="statusFilter">
+            <SelectTrigger class="w-40">
+              <SelectValue placeholder="Statut" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous</SelectItem>
+              <SelectItem value="pending">En attente</SelectItem>
+              <SelectItem value="confirmed">Confirmé</SelectItem>
+              <SelectItem value="rejected">Rejeté</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Input
+            v-model="dateFrom"
+            type="date"
+            placeholder="Date de début"
+            class="w-40"
+          />
+          <Input
+            v-model="dateTo"
+            type="date"
+            placeholder="Date de fin"
+            class="w-40"
+          />
+        </div>
+        <div class="flex gap-2">
+          <Button variant="outline" @click="resetFilters">
+            Réinitialiser
+          </Button>
+          <Button @click="loadTeamMatches">
+            Actualiser
+          </Button>
+        </div>
       </div>
     </div>
 
@@ -231,6 +251,8 @@ import { useAdmin } from '@/features/admin/composables/useAdmin'
 import adminTeamMatchesService from '@/features/admin/services/admin-team-matches.service'
 import PlayerService from '@/features/core/services/player.service'
 import TeamService from '@/features/core/services/team.service'
+import TournamentService from '@/features/core/services/tournament.service'
+import type { Tournament } from '@/features/admin/types/tournament'
 import toastService from '@/shared/services/toast.service'
 import type { TeamMatch, TeamMatchFilters } from '@/features/admin/types/team-match'
 import type { Player } from '@/features/core/types/player'
@@ -256,11 +278,13 @@ const { } = useAdmin()
 const teamMatches = ref<TeamMatch[]>([])
 const players = ref<Player[]>([])
 const teams = ref<Team[]>([])
+const tournaments = ref<Tournament[]>([])
 const loading = ref(false)
 const deleting = ref(false)
 const cancelling = ref(false)
 const selectedTeamId = ref('all')
 const selectedPlayerId = ref('all')
+const selectedTournamentId = ref('all')
 const statusFilter = ref('all')
 const dateFrom = ref('')
 const dateTo = ref('')
@@ -275,6 +299,7 @@ const showDeleteConfirm = ref(false)
 const filters = computed<TeamMatchFilters>(() => ({
   team_id: selectedTeamId.value === 'all' ? undefined : selectedTeamId.value,
   player_id: selectedPlayerId.value === 'all' ? undefined : selectedPlayerId.value,
+  tournament_id: selectedTournamentId.value === 'all' ? undefined : selectedTournamentId.value,
   status: statusFilter.value === 'all' ? undefined : statusFilter.value as 'pending' | 'confirmed' | 'rejected' | 'cancelled',
   date_from: dateFrom.value || undefined,
   date_to: dateTo.value || undefined
@@ -312,6 +337,16 @@ const loadTeams = async () => {
   } catch (error) {
     toastService.error('Erreur', 'Impossible de charger les équipes')
     console.error('Failed to load teams:', error)
+  }
+}
+
+const loadTournaments = async () => {
+  try {
+    const response = await TournamentService.getTournaments({ type: 'team' }, 1, 100)
+    tournaments.value = response.data
+  } catch (error) {
+    toastService.error('Erreur', 'Impossible de charger les tournois')
+    console.error('Failed to load tournaments:', error)
   }
 }
 
@@ -355,6 +390,7 @@ const deleteTeamMatch = async () => {
 const resetFilters = () => {
   selectedTeamId.value = 'all'
   selectedPlayerId.value = 'all'
+  selectedTournamentId.value = 'all'
   statusFilter.value = 'all'
   dateFrom.value = ''
   dateTo.value = ''
@@ -411,7 +447,7 @@ const formatDate = (dateString: string) => {
   })
 }
 
-watch([selectedTeamId, selectedPlayerId, statusFilter, dateFrom, dateTo], () => {
+watch([selectedTeamId, selectedPlayerId, selectedTournamentId, statusFilter, dateFrom, dateTo], () => {
   currentPage.value = 1
   loadTeamMatches()
 })
@@ -419,6 +455,7 @@ watch([selectedTeamId, selectedPlayerId, statusFilter, dateFrom, dateTo], () => 
 onMounted(() => {
   loadPlayers()
   loadTeams()
+  loadTournaments()
   loadTeamMatches()
 })
 </script>
