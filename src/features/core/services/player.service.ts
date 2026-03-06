@@ -1,6 +1,6 @@
 import apiClient from '@/core/lib/axios.ts'
 import type { Player, EloChartEntry } from '@/features/core/types/player.ts'
-import type { EloHistory } from '@/features/core/types/elo-history.ts'
+import type { EloHistory, TeamEloHistory } from '@/features/core/types/elo-history.ts'
 import type { Match } from '@/features/core/types/match.ts'
 import type { Team } from '@/features/core/types/team.ts'
 import type { PaginatedResponse, PaginationParams } from '@/shared/types/pagination.ts'
@@ -48,14 +48,22 @@ class PlayerService {
     async getPlayerEloHistory(id: number, limit?: number, matchType?: 'solo' | 'team'): Promise<EloChartEntry[]> {
         const queryParams = new URLSearchParams()
         if (limit) queryParams.append('limit', limit.toString())
-        if (matchType) queryParams.append('match_type', matchType)
-        
+
         const queryString = queryParams.toString()
+
+        if (matchType === 'team') {
+            const url = `/players/${id}/team-elo-history${queryString ? `?${queryString}` : ''}`
+            const response = await apiClient.get<TeamEloHistory[]>(url)
+            return response.data.map((entry: TeamEloHistory): EloChartEntry => ({
+                date: entry.created_at,
+                elo: entry.elo_after,
+                eloChange: entry.elo_change,
+                matchType: 'team'
+            }))
+        }
+
         const url = `/players/${id}/elo-history${queryString ? `?${queryString}` : ''}`
-        
         const response = await apiClient.get<EloHistory[]>(url)
-        
-        // Transformer les données de l'API pour le format attendu par le composant graphique
         return response.data.map((entry: EloHistory): EloChartEntry => ({
             date: entry.created_at,
             elo: entry.elo_after,
