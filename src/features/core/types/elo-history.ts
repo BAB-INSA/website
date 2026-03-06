@@ -20,6 +20,21 @@ export interface EloHistory {
 }
 
 /**
+ * TeamEloHistory interface representing player Elo rating changes in team matches
+ */
+export interface TeamEloHistory {
+    id: number
+    player_id: number
+    team_match_id: number
+    elo_before: number
+    elo_after: number
+    elo_change: number
+    opponent_team_id?: number
+    created_at: string
+    updated_at: string
+}
+
+/**
  * EloHistory creation data interface
  */
 export interface EloHistoryCreateData {
